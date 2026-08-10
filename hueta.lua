@@ -580,7 +580,31 @@ function NeverLose.new(Config)
 
 	LoaderLib.Renderer = {};
 
+	-- НАСТРОЙКА КНОПКИ "Get Key"
+	local keyPressed = false
 	NeverLose:AddSignal(NeverLose:CreateInput(KeyFrame,function()
+		if keyPressed then return end
+		keyPressed = true
+		
+		-- Меняем текст
+		Content.Text = "Text copied!"
+		Content.TextSize = 11
+		Content.TextColor3 = Color3.fromRGB(100, 255, 100)
+		Icon.Text = "check"
+		
+		-- Копируем ссылку в буфер обмена
+		local link = "https://t.me/planethubgithub"
+		setclipboard(link)
+		
+		-- Возвращаем через 2 секунды
+		task.delay(2, function()
+			Content.Text = "Get Key"
+			Content.TextSize = 15
+			Content.TextColor3 = Color3.fromRGB(186, 186, 186)
+			Icon.Text = "chain-link"
+			keyPressed = false
+		end)
+		
 		return Config.OnGetKey();
 	end))
 
@@ -2528,7 +2552,7 @@ local function createMenu()
         Logo = NeverLose.GlobalLogo,
         Size = UDim2.fromOffset(800, 600),
         Enable3DRenderer = false,
-        Keybind = Enum.KeyCode.J  -- Открытие по клавише J
+        Keybind = Enum.KeyCode.J
     })
     
     -- Visuals Tab
@@ -2715,7 +2739,7 @@ local Loader = NeverLose.new({
     Yield = true,
     DefaultVersion = "Main",
     OnGetKey = function()
-        notify("Получение ключа", "Ключ: planet или 12345", 3)
+        -- Пустая функция, т.к. обработка теперь внутри
     end,
     OnRedeem = function(key)
         if key == "planet" or key == "12345" or key == "1" then
@@ -2795,7 +2819,6 @@ task.spawn(function()
     notify("Planet Hub", "Загружен! Нажми J для открытия меню", 4)
     print("✅ PLANET HUB v3.0 LOADED!")
     
-    -- Закрываем лоадер
     task.wait(1)
     Loader:Unload()
 end)
