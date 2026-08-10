@@ -1,17 +1,950 @@
---[[
-    Planet Hub v3.0 Ultimate
-    Интеграция в NeverLose UI Library
-]]
+-- ========================================
+-- ===== NEVERLOSE UI LIBRARY + PLANET HUB =====
+-- ========================================
 
-local NeverLose = loadstring(game:HttpGet("https://raw.githubusercontent.com/4lpaca-pin/NeverLose/main/Source.lua"))()
+do
+	local Constant = 'LPH_'..'NO_VIRTUALIZE';
+	getfenv()[Constant] = getfenv()[Constant] or function(f) return f end;
+end;
 
--- ОБХОД ЛИМИТА РЕГИСТРОВ
+local NeverLose = {};
+
+NeverLose.BuiltInRegular = Font.new('rbxasset://LuaPackages/Packages/_Index/BuilderIcons/BuilderIcons/BuilderIcons.json',Enum.FontWeight.Regular,Enum.FontStyle.Normal);
+NeverLose.BuiltInBold = Font.new('rbxasset://LuaPackages/Packages/_Index/BuilderIcons/BuilderIcons/BuilderIcons.json',Enum.FontWeight.Bold,Enum.FontStyle.Normal);
+NeverLose.GlobalSignals = {};
+
+local cloneref: cloneref = cloneref or function(f) return f end;
+local TweenService: TweenService = cloneref(game:GetService('TweenService'));
+local UserInputService: UserInputService = cloneref(game:GetService('UserInputService'));
+local TextService: TextService = cloneref(game:GetService('TextService'));
+local RunService: RunService = cloneref(game:GetService('RunService'));
+local Players: Players = cloneref(game:GetService('Players'));
+local HttpService: HttpService = cloneref(game:GetService('HttpService'));
+local LocalPlayer: Player = Players.LocalPlayer;
+local CoreGui: PlayerGui = (gethui and gethui()) or (get_hidden_gui and get_hidden_gui()) or cloneref(game:FindFirstChild('CoreGui')) or cloneref(LocalPlayer.PlayerGui);
+local Mouse: Mouse = LocalPlayer:GetMouse();
+local CurrentCamera: Camera = cloneref(workspace.CurrentCamera);
+local ProtectGui = protect_gui or protectgui or (syn and syn.protect_gui) or function(s) return s; end;
+local GlobalWindow = Instance.new('ScreenGui');
+local ManualTween = TweenInfo.new(0.1);
+local SlowyTween = TweenInfo.new(0.175);
+local FastTween = TweenInfo.new(0.05);
+local VSlowTween = TweenInfo.new(0.5,Enum.EasingStyle.Quint);
+local Encryption = {};
+
+NeverLose.RandomString = LPH_NO_VIRTUALIZE(function()
+	return string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4));
+end);
+
+ProtectGui(GlobalWindow);
+
+GlobalWindow.Name = NeverLose.RandomString();
+GlobalWindow.IgnoreGuiInset = true;
+GlobalWindow.ZIndexBehavior = Enum.ZIndexBehavior.Global;
+GlobalWindow.ResetOnSpawn = false;
+GlobalWindow.Parent = CoreGui;
+NeverLose.ScreenGui = GlobalWindow;
+NeverLose.AccentColor = Color3.fromRGB(78, 127, 252);
+NeverLose.RegisiteryColor = {};
+
+function NeverLose:AddSignal(RBXSignal)
+	if NeverLose.UnloadEnabled then
+		table.insert(NeverLose.GlobalSignals,RBXSignal);	
+	end;
+
+	return RBXSignal;
+end;
+
+NeverLose.IsStudio = RunService:IsStudio();
+NeverLose.IsMobile = UserInputService.TouchEnabled;
+
+NeverLose.CreateInput = LPH_NO_VIRTUALIZE(function(self , Frame , Callback)
+	local Button = Instance.new('ImageButton',Frame);
+
+	Button.ZIndex = Frame.ZIndex + 10;
+	Button.Size = UDim2.fromScale(1,1);
+	Button.BackgroundTransparency = 1;
+	Button.ImageTransparency = 1;
+	Button.Image = "rbxasset://textuers/translateIcon.png";
+
+	if Callback then
+		local bth_signal = Button.MouseButton1Click:Connect(Callback);
+
+		return bth_signal;
+	end;
+
+	return Button;
+end);
+
+NeverLose.PlayAnimate = LPH_NO_VIRTUALIZE(function(Self , Info , Property)
+	local Tween = TweenService:Create(Self , Info or TweenInfo.new(0.25) , Property);
+
+	Tween:Play();
+
+	return Tween;
+end);
+
+function NeverLose:RollingEffect(parent)
+	local UIGradient = Instance.new("UIGradient")
+
+	UIGradient.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0.00, 0.5), NumberSequenceKeypoint.new(1.00, 0.00)}
+	UIGradient.Parent = parent
+
+	return UIGradient;
+end;
+
+function NeverLose:MarkLoad(LoaderFrame)
+	local LoadingFrame = Instance.new("Frame")
+	local UICorner = Instance.new("UICorner")
+	local UIStroke = Instance.new("UIStroke")
+	local IconFrame = Instance.new("Frame")
+	local UICorner_2 = Instance.new("UICorner")
+	local UIStroke_2 = Instance.new("UIStroke")
+	local Icon = Instance.new("TextLabel")
+
+	LoadingFrame.Name = NeverLose.RandomString();
+	LoadingFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	LoadingFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 13)
+	LoadingFrame.BackgroundTransparency = 0.500
+	LoadingFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	LoadingFrame.BorderSizePixel = 0
+	LoadingFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+	LoadingFrame.Size = UDim2.new(1, 0, 1, 0)
+	LoadingFrame.ZIndex = 100
+
+	UICorner.Parent = LoadingFrame
+
+	UIStroke.Transparency = 0.650
+	UIStroke.Color = Color3.fromRGB(45, 48, 58)
+	UIStroke.Parent = LoadingFrame
+
+	IconFrame.Name = NeverLose.RandomString();
+	IconFrame.Parent = LoadingFrame
+	IconFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	IconFrame.BackgroundColor3 = Color3.fromRGB(20, 22, 27)
+	IconFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	IconFrame.BorderSizePixel = 0
+	IconFrame.ClipsDescendants = true
+	IconFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+	IconFrame.Size = UDim2.new(0.300000012, 0, 0.300000012, 0)
+	IconFrame.SizeConstraint = Enum.SizeConstraint.RelativeYY
+	IconFrame.ZIndex = 101
+
+	UICorner_2.Parent = IconFrame
+
+	UIStroke_2.Transparency = 0.650
+	UIStroke_2.Color = Color3.fromRGB(45, 48, 58)
+	UIStroke_2.Parent = IconFrame
+
+	Icon.Name = NeverLose.RandomString();
+	Icon.Parent = IconFrame
+	Icon.AnchorPoint = Vector2.new(0.5, 0.5)
+	Icon.BackgroundColor3 = Color3.fromRGB(186, 186, 186)
+	Icon.BackgroundTransparency = 1.000
+	Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Icon.BorderSizePixel = 0
+	Icon.Position = UDim2.new(0.5, 0, 0.5, 0)
+	Icon.Size = UDim2.new(0.699999988, 0, 0.699999988, 0)
+	Icon.ZIndex = 102
+	Icon.FontFace = NeverLose.BuiltInBold
+	Icon.Text = "arrow-spin-clockwise"
+	Icon.TextColor3 = Color3.fromRGB(78, 127, 252)
+	Icon.TextSize = 30.000
+	Icon.TextTransparency = 0.250
+	Icon.TextWrapped = true
+
+	local lib = {};
+
+	lib.SetValue = LPH_NO_VIRTUALIZE(function(value)
+		if lib.Thread then
+			task.cancel(lib.Thread);
+			lib.Thread = nil;
+		end;
+
+		if value then
+			LoadingFrame.Parent = LoaderFrame;
+
+			NeverLose.PlayAnimate(LoadingFrame,SlowyTween,{
+				BackgroundTransparency = 0.500
+			})	
+
+			NeverLose.PlayAnimate(UIStroke,SlowyTween,{
+				Transparency = 0.650
+			})	
+
+			NeverLose.PlayAnimate(IconFrame,SlowyTween,{
+				BackgroundTransparency = 0,
+				Size = UDim2.new(0.300000012, 0, 0.300000012, 0)
+			})	
+
+			NeverLose.PlayAnimate(UIStroke_2,SlowyTween,{
+				Transparency = 0.650
+			})	
+
+			NeverLose.PlayAnimate(Icon,SlowyTween,{
+				TextTransparency = 0.250
+			})	
+
+			lib.Thread = task.spawn(function()
+				while true do task.wait()
+					NeverLose.PlayAnimate(Icon,SlowyTween,{
+						Rotation = Icon.Rotation + 45
+					})
+				end;
+			end);
+		else
+			NeverLose.PlayAnimate(LoadingFrame,SlowyTween,{
+				BackgroundTransparency = 1
+			})	
+
+			NeverLose.PlayAnimate(UIStroke,SlowyTween,{
+				Transparency = 1
+			})	
+
+			NeverLose.PlayAnimate(IconFrame,SlowyTween,{
+				BackgroundTransparency = 1,
+				Size = UDim2.new(0.15, 0, 0.15, 0)
+			})	
+
+			NeverLose.PlayAnimate(UIStroke_2,SlowyTween,{
+				Transparency = 1
+			})	
+
+			NeverLose.PlayAnimate(Icon,SlowyTween,{
+				TextTransparency = 1
+			})	
+		end;
+	end);
+
+	lib.SetValue(false);
+
+	return lib;
+end;
+
+function NeverLose:CreateShadow(parent , RollingEffect)
+	local Shadow = {};
+
+	local UIShadowSafe85 = Instance.new("UIStroke")
+	local UIShadowSafe65 = Instance.new("UIStroke")
+	local UIShadowSafe50 = Instance.new("UIStroke")
+	local UIShadowSafe45 = Instance.new("UIStroke")
+
+	UIShadowSafe85.Thickness = 6.000
+	UIShadowSafe85.Transparency = 1
+	UIShadowSafe85.Parent = parent
+
+	UIShadowSafe65.Thickness = 5.000
+	UIShadowSafe65.Transparency = 1
+	UIShadowSafe65.Parent = parent
+
+	UIShadowSafe50.Thickness = 4.000
+	UIShadowSafe50.Transparency = 1
+	UIShadowSafe50.Parent = parent
+
+	UIShadowSafe45.Thickness = 3.000
+	UIShadowSafe45.Transparency = 1
+	UIShadowSafe45.Parent = parent
+
+	local RollingEffectThread;
+	local r1,r2,r3,r4;
+
+	if RollingEffect then
+		r1 = NeverLose:RollingEffect(UIShadowSafe85);
+		r2 = NeverLose:RollingEffect(UIShadowSafe65);
+		r3 = NeverLose:RollingEffect(UIShadowSafe50);
+		r4 = NeverLose:RollingEffect(UIShadowSafe45);
+	end;
+
+	Shadow.Render = LPH_NO_VIRTUALIZE(function(self , value)
+		if RollingEffectThread then
+			task.cancel(RollingEffectThread);
+			RollingEffectThread = nil;
+		end;
+
+		if value then
+			NeverLose.PlayAnimate(UIShadowSafe85 , SlowyTween , {
+				Transparency = 0.900
+			})
+
+			NeverLose.PlayAnimate(UIShadowSafe65 , SlowyTween , {
+				Transparency = 0.900
+			})
+
+			NeverLose.PlayAnimate(UIShadowSafe50 , SlowyTween , {
+				Transparency = 0.900
+			})
+
+			NeverLose.PlayAnimate(UIShadowSafe45 , SlowyTween , {
+				Transparency = 0.900
+			})
+
+			if RollingEffect then
+				RollingEffectThread = task.spawn(function()
+					local level = 20;
+					while true do task.wait(0.025)
+						NeverLose.PlayAnimate(r1 , SlowyTween , {
+							Rotation = r1.Rotation + level
+						});
+
+						NeverLose.PlayAnimate(r2 , SlowyTween , {
+							Rotation = r2.Rotation + level
+						});
+
+						NeverLose.PlayAnimate(r3 , SlowyTween , {
+							Rotation = r3.Rotation + level
+						});
+
+						NeverLose.PlayAnimate(r4 , SlowyTween , {
+							Rotation = r4.Rotation + level
+						});
+					end;
+				end);
+			end;
+		else
+			NeverLose.PlayAnimate(UIShadowSafe85 , SlowyTween , {
+				Transparency = 1
+			})
+
+			NeverLose.PlayAnimate(UIShadowSafe65 , SlowyTween , {
+				Transparency = 1
+			})
+
+			NeverLose.PlayAnimate(UIShadowSafe50 , SlowyTween , {
+				Transparency = 1
+			})
+
+			NeverLose.PlayAnimate(UIShadowSafe45 , SlowyTween , {
+				Transparency = 1
+			})
+		end;
+	end);
+
+	return Shadow;
+end;
+
+NeverLose.ProcessParams = LPH_NO_VIRTUALIZE(function(self , Params , Fixed)
+	Params = Params or {};
+
+	local k = Params or {};
+
+	for i,v in next , Fixed do
+		rawset(k,i , rawget(Params,i) or v)
+	end;
+
+	table.clear(Fixed);
+
+	return k;
+end);
+
+function NeverLose.new(Config)
+	Config = NeverLose:ProcessParams(Config , {
+		Name = "Neverlose",
+		Content = "Available Products",
+		Process = "Script will automatically load.",
+		Default = "",
+		Yield = true,
+		DefaultVersion = nil,
+		Versions = {},
+		OnGetKey = function() end,
+		OnRedeem = function() end,
+	});
+
+	local LoaderLib = {};
+	local LoaderFrame = Instance.new("Frame")
+	local UICorner = Instance.new("UICorner")
+	local WindowName = Instance.new("TextLabel")
+	local WindowContent = Instance.new("TextLabel")
+	local ScrollingFrame = Instance.new("ScrollingFrame")
+	local UIListLayout = Instance.new("UIListLayout")
+	local SubSpace = Instance.new("Frame")
+	local InputFrame = Instance.new("Frame")
+	local UICorner_2 = Instance.new("UICorner")
+	local UIStroke = Instance.new("UIStroke")
+	local TextBox = Instance.new("TextBox")
+	local KeyFrame = Instance.new("Frame")
+	local UICorner_3 = Instance.new("UICorner")
+	local UIStroke_2 = Instance.new("UIStroke")
+	local Content = Instance.new("TextLabel")
+	local Icon = Instance.new("TextLabel")
+	local RedeemFrame = Instance.new("Frame")
+	local UICorner_4 = Instance.new("UICorner")
+	local UIStroke_3 = Instance.new("UIStroke")
+	local Content_2 = Instance.new("TextLabel")
+	local Icon_2 = Instance.new("TextLabel")
+	local Shadow = NeverLose:CreateShadow(LoaderFrame,true);
+
+	LoaderLib.MarkLoad = NeverLose:MarkLoad(LoaderFrame);
+	LoaderLib.YieldEvent = Instance.new('BindableEvent',LoaderFrame);
+
+	LoaderFrame.Name = "LOADER="..NeverLose.RandomString();
+	LoaderFrame.Parent = NeverLose.ScreenGui
+	LoaderFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	LoaderFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 13)
+	LoaderFrame.BackgroundTransparency = 0.055
+	LoaderFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	LoaderFrame.BorderSizePixel = 0
+	LoaderFrame.ClipsDescendants = true
+	LoaderFrame.Position = UDim2.new(255,255,255,255)
+	LoaderFrame.Size = UDim2.new(0, 350, 0, 15)
+
+	UICorner.Parent = LoaderFrame
+
+	WindowName.Name = NeverLose.RandomString();
+	WindowName.Parent = LoaderFrame
+	WindowName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	WindowName.BackgroundTransparency = 1.000
+	WindowName.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	WindowName.BorderSizePixel = 0
+	WindowName.Position = UDim2.new(0, 15, 0, 4)
+	WindowName.Size = UDim2.new(0, 200, 0, 25)
+	WindowName.ZIndex = 7
+	WindowName.Font = Enum.Font.GothamBold
+	WindowName.Text = Config.Name
+	WindowName.TextColor3 = Color3.fromRGB(255, 255, 255)
+	WindowName.TextSize = 21.000
+	WindowName.TextXAlignment = Enum.TextXAlignment.Left
+
+	WindowContent.Name = NeverLose.RandomString();
+	WindowContent.Parent = LoaderFrame
+	WindowContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	WindowContent.BackgroundTransparency = 1.000
+	WindowContent.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	WindowContent.BorderSizePixel = 0
+	WindowContent.Position = UDim2.new(0, 15, 0, 25)
+	WindowContent.Size = UDim2.new(0, 200, 0, 15)
+	WindowContent.ZIndex = 7
+	WindowContent.Font = Enum.Font.GothamBold
+	WindowContent.Text = Config.Content
+	WindowContent.TextColor3 = Color3.fromRGB(255, 255, 255)
+	WindowContent.TextSize = 10.000
+	WindowContent.TextTransparency = 0.650
+	WindowContent.TextXAlignment = Enum.TextXAlignment.Left
+
+	ScrollingFrame.Parent = LoaderFrame
+	ScrollingFrame.Active = true
+	ScrollingFrame.AnchorPoint = Vector2.new(0.5, 0)
+	ScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ScrollingFrame.BackgroundTransparency = 1.000
+	ScrollingFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	ScrollingFrame.BorderSizePixel = 0
+	ScrollingFrame.Position = UDim2.new(0.5, 0, 0, 55)
+	ScrollingFrame.Size = UDim2.new(1, -20, 1, -150)
+	ScrollingFrame.ZIndex = 7
+	ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+	ScrollingFrame.ScrollBarThickness = 0
+
+	UIListLayout.Parent = ScrollingFrame
+	UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout.Padding = UDim.new(0, 5)
+
+	SubSpace.Name = NeverLose.RandomString();
+	SubSpace.Parent = ScrollingFrame
+	SubSpace.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	SubSpace.BackgroundTransparency = 1.000
+	SubSpace.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	SubSpace.BorderSizePixel = 0
+
+	InputFrame.Name = "InputFrame"
+	InputFrame.Parent = LoaderFrame
+	InputFrame.AnchorPoint = Vector2.new(0.5, 1)
+	InputFrame.BackgroundColor3 = Color3.fromRGB(20, 22, 27)
+	InputFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	InputFrame.BorderSizePixel = 0
+	InputFrame.Position = UDim2.new(0.5, 0, 1, -55)
+	InputFrame.Size = UDim2.new(1, -25, 0, 35)
+	InputFrame.ZIndex = 10
+
+	UICorner_2.Parent = InputFrame
+
+	UIStroke.Transparency = 0.650
+	UIStroke.Color = Color3.fromRGB(45, 48, 58)
+	UIStroke.Parent = InputFrame
+
+	TextBox.Parent = InputFrame
+	TextBox.AnchorPoint = Vector2.new(0.5, 0.5)
+	TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	TextBox.BackgroundTransparency = 1.000
+	TextBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextBox.BorderSizePixel = 0
+	TextBox.Position = UDim2.new(0.5, 0, 0.5, 0)
+	TextBox.Size = UDim2.new(1, -20, 0, 30)
+	TextBox.ZIndex = 17
+	TextBox.ClearTextOnFocus = false
+	TextBox.Font = Enum.Font.GothamMedium
+	TextBox.PlaceholderText = "Product Key"
+	TextBox.Text = Config.Default
+	TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+	TextBox.TextSize = 11.000
+	TextBox.TextTransparency = 0.350
+	TextBox.TextXAlignment = Enum.TextXAlignment.Left
+
+	KeyFrame.Name = NeverLose.RandomString();
+	KeyFrame.Parent = LoaderFrame
+	KeyFrame.AnchorPoint = Vector2.new(0.5, 1)
+	KeyFrame.BackgroundColor3 = Color3.fromRGB(20, 22, 27)
+	KeyFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	KeyFrame.BorderSizePixel = 0
+	KeyFrame.Position = UDim2.new(0.25999999, 0, 1, -10)
+	KeyFrame.Size = UDim2.new(0.5, -20, 0, 35)
+	KeyFrame.ZIndex = 10
+
+	UICorner_3.Parent = KeyFrame
+
+	UIStroke_2.Transparency = 0.650
+	UIStroke_2.Color = Color3.fromRGB(45, 48, 58)
+	UIStroke_2.Parent = KeyFrame
+
+	Content.Name = NeverLose.RandomString();
+	Content.Parent = KeyFrame
+	Content.AnchorPoint = Vector2.new(0, 0.5)
+	Content.BackgroundColor3 = Color3.fromRGB(186, 186, 186)
+	Content.BackgroundTransparency = 1.000
+	Content.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Content.BorderSizePixel = 0
+	Content.Position = UDim2.new(0, 35, 0.5, 0)
+	Content.Size = UDim2.new(0, 1, 0, 25)
+	Content.ZIndex = 17
+	Content.Font = Enum.Font.GothamBold
+	Content.Text = "Get Key"
+	Content.TextColor3 = Color3.fromRGB(186, 186, 186)
+	Content.TextSize = 15.000
+	Content.TextTransparency = 0.200
+	Content.TextXAlignment = Enum.TextXAlignment.Left
+
+	Icon.Name = NeverLose.RandomString();
+	Icon.Parent = KeyFrame
+	Icon.AnchorPoint = Vector2.new(0, 0.5)
+	Icon.BackgroundColor3 = Color3.fromRGB(186, 186, 186)
+	Icon.BackgroundTransparency = 1.000
+	Icon.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Icon.BorderSizePixel = 0
+	Icon.Position = UDim2.new(0, 10, 0.5, 0)
+	Icon.Size = UDim2.new(0, 20, 0, 20)
+	Icon.ZIndex = 17
+	Icon.FontFace = NeverLose.BuiltInBold
+	Icon.Text = "chain-link"
+	Icon.TextColor3 = Color3.fromRGB(78, 127, 252)
+	Icon.TextSize = 18.000
+	Icon.TextTransparency = 0.250
+	Icon.TextWrapped = true
+
+	RedeemFrame.Name = "RedeemFrame"
+	RedeemFrame.Parent = LoaderFrame
+	RedeemFrame.AnchorPoint = Vector2.new(0.5, 1)
+	RedeemFrame.BackgroundColor3 = Color3.fromRGB(20, 22, 27)
+	RedeemFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	RedeemFrame.BorderSizePixel = 0
+	RedeemFrame.Position = UDim2.new(0.74000001, 0, 1, -10)
+	RedeemFrame.Size = UDim2.new(0.5, -20, 0, 35)
+	RedeemFrame.ZIndex = 10
+
+	UICorner_4.Parent = RedeemFrame
+
+	UIStroke_3.Transparency = 0.650
+	UIStroke_3.Color = Color3.fromRGB(45, 48, 58)
+	UIStroke_3.Parent = RedeemFrame
+
+	Content_2.Name = NeverLose.RandomString();
+	Content_2.Parent = RedeemFrame
+	Content_2.AnchorPoint = Vector2.new(0, 0.5)
+	Content_2.BackgroundColor3 = Color3.fromRGB(186, 186, 186)
+	Content_2.BackgroundTransparency = 1.000
+	Content_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Content_2.BorderSizePixel = 0
+	Content_2.Position = UDim2.new(0, 35, 0.5, 0)
+	Content_2.Size = UDim2.new(0, 1, 0, 25)
+	Content_2.ZIndex = 17
+	Content_2.Font = Enum.Font.GothamBold
+	Content_2.Text = "Login"
+	Content_2.TextColor3 = Color3.fromRGB(186, 186, 186)
+	Content_2.TextSize = 15.000
+	Content_2.TextTransparency = 0.200
+	Content_2.TextXAlignment = Enum.TextXAlignment.Left
+
+	Icon_2.Name = NeverLose.RandomString();
+	Icon_2.Parent = RedeemFrame
+	Icon_2.AnchorPoint = Vector2.new(0, 0.5)
+	Icon_2.BackgroundColor3 = Color3.fromRGB(186, 186, 186)
+	Icon_2.BackgroundTransparency = 1.000
+	Icon_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	Icon_2.BorderSizePixel = 0
+	Icon_2.Position = UDim2.new(0, 10, 0.5, 0)
+	Icon_2.Size = UDim2.new(0, 20, 0, 20)
+	Icon_2.ZIndex = 17
+	Icon_2.FontFace = NeverLose.BuiltInBold
+	Icon_2.Text = "gift-card"
+	Icon_2.TextColor3 = Color3.fromRGB(78, 127, 252)
+	Icon_2.TextSize = 18.000
+	Icon_2.TextTransparency = 0.250
+	Icon_2.TextWrapped = true
+
+	local VersionItems = {};
+	LoaderLib.Renderer = {};
+
+	for i,v in next , Config.Versions do
+		local VersionProcess = {};
+
+		VersionItems[v.Idx] = VersionProcess;
+
+		local VersionFrame = Instance.new("Frame")
+		local UIStroke = Instance.new("UIStroke")
+		local UICorner = Instance.new("UICorner")
+		local VersionContent = Instance.new("TextLabel")
+		local VersionName = Instance.new("TextLabel")
+
+		VersionFrame.Name = NeverLose.RandomString();
+		VersionFrame.Parent = ScrollingFrame
+		VersionFrame.BackgroundColor3 = Color3.fromRGB(20, 22, 27)
+		VersionFrame.BackgroundTransparency = 0.050
+		VersionFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		VersionFrame.BorderSizePixel = 0
+		VersionFrame.Size = UDim2.new(1, -10, 0, 50)
+		VersionFrame.ZIndex = 15
+
+		UIStroke.Transparency = 0.650
+		UIStroke.Color = Color3.fromRGB(45, 48, 58)
+		UIStroke.Parent = VersionFrame
+
+		UICorner.Parent = VersionFrame
+
+		VersionContent.Name = "VersionContent"
+		VersionContent.Parent = VersionFrame
+		VersionContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		VersionContent.BackgroundTransparency = 1.000
+		VersionContent.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		VersionContent.BorderSizePixel = 0
+		VersionContent.Position = UDim2.new(0, 15, 0, 27)
+		VersionContent.Size = UDim2.new(0, 200, 0, 15)
+		VersionContent.ZIndex = 16
+		VersionContent.Font = Enum.Font.GothamBold
+		VersionContent.Text = v.Content
+		VersionContent.TextColor3 = Color3.fromRGB(255, 255, 255)
+		VersionContent.TextSize = 12.000
+		VersionContent.TextTransparency = 0.650
+		VersionContent.TextXAlignment = Enum.TextXAlignment.Left
+
+		VersionName.Name = NeverLose.RandomString();
+		VersionName.Parent = VersionFrame
+		VersionName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		VersionName.BackgroundTransparency = 1.000
+		VersionName.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		VersionName.BorderSizePixel = 0
+		VersionName.Position = UDim2.new(0, 15, 0, 4)
+		VersionName.Size = UDim2.new(0, 200, 0, 25)
+		VersionName.ZIndex = 16
+		VersionName.Font = Enum.Font.GothamBold
+		VersionName.Text = v.Name
+		VersionName.TextColor3 = Color3.fromRGB(255, 255, 255)
+		VersionName.TextSize = 18.000
+		VersionName.TextTransparency = 0.200
+		VersionName.TextXAlignment = Enum.TextXAlignment.Left;
+
+		VersionProcess.SetRender = LPH_NO_VIRTUALIZE(function(value)
+			if value then
+				NeverLose.PlayAnimate(VersionFrame,SlowyTween , {
+					BackgroundTransparency = 0.050
+				})
+
+				NeverLose.PlayAnimate(UIStroke,SlowyTween , {
+					Transparency = 0.650
+				})
+
+				NeverLose.PlayAnimate(VersionContent,SlowyTween , {
+					TextTransparency = 0.650
+				})
+
+				NeverLose.PlayAnimate(VersionName,SlowyTween , {
+					TextTransparency = 0.200
+				})
+
+				VersionProcess.Match();
+			else
+				NeverLose.PlayAnimate(VersionFrame,SlowyTween , {
+					BackgroundTransparency = 1
+				})
+
+				NeverLose.PlayAnimate(UIStroke,SlowyTween , {
+					Transparency = 1
+				})
+
+				NeverLose.PlayAnimate(VersionContent,SlowyTween , {
+					TextTransparency = 1
+				})
+
+				NeverLose.PlayAnimate(VersionName,SlowyTween , {
+					TextTransparency = 1
+				})
+			end;
+		end);
+
+		table.insert(LoaderLib.Renderer,VersionProcess.SetRender);
+
+		VersionProcess.Match = LPH_NO_VIRTUALIZE(function()
+			if Config.DefaultVersion == v.Idx then
+				NeverLose.PlayAnimate(VersionFrame,SlowyTween , {
+					BackgroundColor3 = NeverLose.AccentColor,
+					BackgroundTransparency = 0.5
+				})
+			else
+				NeverLose.PlayAnimate(VersionFrame,SlowyTween , {
+					BackgroundColor3 = Color3.fromRGB(20, 22, 27),
+					BackgroundTransparency = 0.050
+				})
+			end;
+		end);
+
+		NeverLose:AddSignal(NeverLose:CreateInput(VersionFrame,function()
+			Config.DefaultVersion = v.Idx;
+
+			for i,v in next , VersionItems do
+				v.Match();
+			end;
+		end))
+
+		VersionProcess.Match();
+		VersionProcess.SetRender(false);
+	end;
+
+	NeverLose:AddSignal(NeverLose:CreateInput(KeyFrame,function()
+		return Config.OnGetKey();
+	end))
+
+	local ratelimit = false;
+	NeverLose:AddSignal(NeverLose:CreateInput(RedeemFrame,function()
+		if ratelimit then
+			return;
+		end;
+
+		ratelimit = true;
+
+		local check,rason = Config.OnRedeem(TextBox.Text);
+
+		if check then
+			TextBox.TextEditable = false;
+
+			LoaderLib.MarkLoad.SetValue(true);
+
+			task.wait(0.1);
+
+			return LoaderLib.YieldEvent:Fire(Config.DefaultVersion or TextBox.Text);
+		else
+			if rason then
+				TextBox.Text = tostring(rason);
+				task.wait(0.75);
+				TextBox.Text = "";
+			else
+				TextBox.Text = "";
+			end;
+		end;
+
+		ratelimit = false;
+	end))
+
+	NeverLose:AddSignal(KeyFrame.MouseEnter:Connect(function()
+		NeverLose.PlayAnimate(KeyFrame,SlowyTween,{
+			BackgroundColor3 = Color3.fromRGB(35, 38, 47)
+		})
+	end));
+
+	NeverLose:AddSignal(KeyFrame.MouseLeave:Connect(function()
+		NeverLose.PlayAnimate(KeyFrame,SlowyTween,{
+			BackgroundColor3 = Color3.fromRGB(20, 22, 27)
+		})
+	end));
+
+	NeverLose:AddSignal(RedeemFrame.MouseEnter:Connect(function()
+		NeverLose.PlayAnimate(RedeemFrame,SlowyTween,{
+			BackgroundColor3 = Color3.fromRGB(35, 38, 47)
+		})
+	end));
+
+	NeverLose:AddSignal(RedeemFrame.MouseLeave:Connect(function()
+		NeverLose.PlayAnimate(RedeemFrame,SlowyTween,{
+			BackgroundColor3 = Color3.fromRGB(20, 22, 27)
+		})
+	end));
+
+	NeverLose:AddSignal(InputFrame.MouseEnter:Connect(function()
+		NeverLose.PlayAnimate(InputFrame,SlowyTween,{
+			BackgroundColor3 = Color3.fromRGB(35, 38, 47)
+		})
+	end));
+
+	NeverLose:AddSignal(InputFrame.MouseLeave:Connect(function()
+		NeverLose.PlayAnimate(InputFrame,SlowyTween,{
+			BackgroundColor3 = Color3.fromRGB(20, 22, 27)
+		})
+	end));
+
+	LoaderLib.SetRender = LPH_NO_VIRTUALIZE(function(self , value)
+		if value then
+			LoaderFrame.Position = UDim2.new(0.5,0,0.5,0)
+
+			NeverLose.PlayAnimate(LoaderFrame,VSlowTween , {
+				BackgroundTransparency = 0.055,
+				Size = UDim2.new(0, 350, 0, UIListLayout.AbsoluteContentSize.Y + 160)
+			});
+
+			NeverLose.PlayAnimate(WindowName,SlowyTween , {
+				TextTransparency = 0
+			})
+
+			NeverLose.PlayAnimate(WindowContent,SlowyTween , {
+				TextTransparency = 0.650
+			})
+
+			NeverLose.PlayAnimate(InputFrame,SlowyTween , {
+				BackgroundTransparency = 0.05
+			})
+
+			NeverLose.PlayAnimate(UIStroke,SlowyTween , {
+				Transparency = 0.650
+			})
+
+			NeverLose.PlayAnimate(TextBox,SlowyTween , {
+				TextTransparency = 0.350
+			})
+
+			NeverLose.PlayAnimate(KeyFrame,SlowyTween , {
+				BackgroundTransparency = 0.05
+			})
+
+			NeverLose.PlayAnimate(UIStroke_2,SlowyTween , {
+				Transparency = 0.650
+			})
+
+			NeverLose.PlayAnimate(Content,SlowyTween , {
+				TextTransparency = 0.200
+			})
+
+			NeverLose.PlayAnimate(Icon,SlowyTween , {
+				TextTransparency = 0.250
+			})
+
+			NeverLose.PlayAnimate(RedeemFrame,SlowyTween , {
+				BackgroundTransparency = 0.05
+			})
+
+			NeverLose.PlayAnimate(UIStroke_3,SlowyTween , {
+				Transparency = 0.650
+			})
+
+			NeverLose.PlayAnimate(Content_2,SlowyTween , {
+				TextTransparency = 0.200
+			})
+
+			NeverLose.PlayAnimate(Icon_2,SlowyTween , {
+				TextTransparency = 0.250
+			})
+
+			for i,Render in next , LoaderLib.Renderer do
+				Render(true);
+			end;
+
+			Shadow:Render(true);
+		else
+			NeverLose.PlayAnimate(LoaderFrame,SlowyTween , {
+				BackgroundTransparency = 1
+			});
+
+			NeverLose.PlayAnimate(WindowName,SlowyTween , {
+				TextTransparency = 1
+			})
+
+			NeverLose.PlayAnimate(WindowContent,SlowyTween , {
+				TextTransparency = 1
+			})
+
+			NeverLose.PlayAnimate(InputFrame,SlowyTween , {
+				BackgroundTransparency = 1
+			})
+
+			NeverLose.PlayAnimate(UIStroke,SlowyTween , {
+				Transparency = 1
+			})
+
+			NeverLose.PlayAnimate(TextBox,SlowyTween , {
+				TextTransparency = 1
+			})
+
+			NeverLose.PlayAnimate(KeyFrame,SlowyTween , {
+				BackgroundTransparency = 1
+			})
+
+			NeverLose.PlayAnimate(UIStroke_2,SlowyTween , {
+				Transparency = 1
+			})
+
+			NeverLose.PlayAnimate(Content,SlowyTween , {
+				TextTransparency = 1
+			})
+
+			NeverLose.PlayAnimate(Icon,SlowyTween , {
+				TextTransparency = 1
+			})
+
+			NeverLose.PlayAnimate(RedeemFrame,SlowyTween , {
+				BackgroundTransparency = 1
+			})
+
+			NeverLose.PlayAnimate(UIStroke_3,SlowyTween , {
+				Transparency = 1
+			})
+
+			NeverLose.PlayAnimate(Content_2,SlowyTween , {
+				TextTransparency = 1
+			});
+
+			NeverLose.PlayAnimate(Icon_2,SlowyTween , {
+				TextTransparency = 1
+			})
+
+			for i,Render in next , LoaderLib.Renderer do
+				Render(false);
+			end;
+
+			LoaderLib.MarkLoad.SetValue(false);
+			Shadow:Render(false);
+		end;
+	end);
+
+	LoaderLib:SetRender(false);
+
+	task.delay(0.3,LoaderLib.SetRender,LoaderLib,true);
+
+	function LoaderLib:Await()
+		return LoaderLib.YieldEvent.Event:Wait();
+	end;
+
+	function LoaderLib:Unload()
+		LoaderLib:SetRender(false);
+		task.wait()
+		task.delay(0.45,function()
+			NeverLose:Unload()
+		end);
+		task.wait(0.3);
+	end;
+
+	return LoaderLib;
+end;
+
+function NeverLose:Unload()
+	NeverLose.ScreenGui:Destroy();
+
+	for i,v in next , NeverLose.GlobalSignals do
+		pcall(v.Disconnect,v)
+	end;
+
+	table.clear(NeverLose);
+end;
+
+-- ========================================
+-- ===== НАСТРОЙКИ PLANET HUB =====
+-- ========================================
+
 local function breakScope() end
 breakScope()
-
--- ========================================
--- ===== НАСТРОЙКИ ПО УМОЛЧАНИЮ =====
--- ========================================
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -26,36 +959,6 @@ local MaterialService = game:GetService("MaterialService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- УДАЛЯЕМ CORE
-local function removeCore()
-    pcall(function()
-        if workspace:FindFirstChild("Core") then
-            workspace.Core:Destroy()
-        end
-        if LocalPlayer.Character then
-            local core = LocalPlayer.Character:FindFirstChild("Core")
-            if core then core:Destroy() end
-        end
-    end)
-end
-
--- ХЕЛПЕРЫ
-local function safeDisconnect(conn)
-    if conn and typeof(conn) == "RBXScriptConnection" then
-        pcall(function() conn:Disconnect() end)
-    end
-end
-
-local function notify(title, content, duration)
-    pcall(function()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = title,
-            Text = content,
-            Duration = duration or 3,
-        })
-    end)
-end
-
 -- ЦВЕТА ПО УМОЛЧАНИЮ
 local DEFAULT_COLORS = {
     Murder = Color3.fromRGB(255, 60, 60),
@@ -69,12 +972,7 @@ local DEFAULT_COLORS = {
     ChinaHat = Color3.fromRGB(0, 255, 255),
 }
 
--- ========================================
--- ===== НАСТРОЙКИ =====
--- ========================================
-
 local Settings = {
-    -- Visuals
     MurderESP = false, MurderColor = DEFAULT_COLORS.Murder,
     SheriffESP = false, SheriffColor = DEFAULT_COLORS.Sheriff,
     InnocentESP = false, InnocentColor = DEFAULT_COLORS.Innocent,
@@ -93,12 +991,10 @@ local Settings = {
     TexturePackEnabled = false,
     CustomSkyId = "",
     StretchEnabled = false, StretchFactor = 0.75,
-    -- Movement
     FlyEnabled = false, FlySpeed = 50,
     BHopEnabled = false, BHopSpeed = 30,
     SpinBotEnabled = false, SpinBotSpeed = 9999,
     NoclipEnabled = false, AntiFlingEnabled = false, WallHopEnabled = false,
-    -- Combat
     FovAimbotEnabled = false, FovRadius = 120,
     KillAllEnabled = false,
     ShootButtonEnabled = false, SheriffAutoShootEnabled = false,
@@ -106,18 +1002,12 @@ local Settings = {
     GrabGunEnabled = false,
     AimSmoothness = 0.5, AimPredict = true, AimWallCheck = true,
     AimHitChance = 80, AimTargetPart = "Head",
-    -- Farm
     AutoFarmEnabled = false, AutoFarmSpeed = 20,
     AutoFarmCoinLimit = 40, AutoFarmCoinDelay = 0.15,
     AutoRespawn = true, AntiAFKEnabled = false,
-    -- Animations
     AnimPackEnabled = false, AnimPack = "",
     Binds = {},
 }
-
--- ========================================
--- ===== КЭШ =====
--- ========================================
 
 local Cache = {
     FlyKeys = {F=0, B=0, L=0, R=0},
@@ -161,9 +1051,34 @@ local Cache = {
     StretchConnection = nil,
 }
 
--- ========================================
--- ===== ХЕЛПЕРЫ ДЛЯ РОЛЕЙ =====
--- ========================================
+-- ХЕЛПЕРЫ
+local function safeDisconnect(conn)
+    if conn and typeof(conn) == "RBXScriptConnection" then
+        pcall(function() conn:Disconnect() end)
+    end
+end
+
+local function notify(title, content, duration)
+    pcall(function()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = title,
+            Text = content,
+            Duration = duration or 3,
+        })
+    end)
+end
+
+local function removeCore()
+    pcall(function()
+        if workspace:FindFirstChild("Core") then
+            workspace.Core:Destroy()
+        end
+        if LocalPlayer.Character then
+            local core = LocalPlayer.Character:FindFirstChild("Core")
+            if core then core:Destroy() end
+        end
+    end)
+end
 
 local function checkKnife(p)
     if not p or not p.Character then return false end
@@ -231,32 +1146,6 @@ local function isPlayerVisible(player)
     return not result
 end
 
-local function hexToRGB(hex)
-    hex = hex:gsub("#", "")
-    if #hex == 6 then
-        return Color3.fromRGB(
-            tonumber("0x" .. hex:sub(1,2)) or 255,
-            tonumber("0x" .. hex:sub(3,4)) or 255,
-            tonumber("0x" .. hex:sub(5,6)) or 255
-        )
-    end
-    return Color3.fromRGB(255,255,255)
-end
-
-local function colorInputToColor3(value)
-    if value:match("^#%x%x%x%x%x%x$") then
-        return hexToRGB(value)
-    end
-    local parts = {}
-    for p in value:gmatch("[^,]+") do
-        table.insert(parts, tonumber(p))
-    end
-    if #parts == 3 then
-        return Color3.fromRGB(parts[1], parts[2], parts[3])
-    end
-    return nil
-end
-
 local function equipGun()
     if not LocalPlayer.Character then return false end
     for _, item in ipairs(LocalPlayer.Character:GetDescendants()) do
@@ -283,11 +1172,7 @@ local function equipGun()
     return false
 end
 
--- ========================================
--- ===== ФУНКЦИИ ДВИЖЕНИЯ =====
--- ========================================
-
--- FLY
+-- ФУНКЦИИ ДВИЖЕНИЯ
 local function stopFly()
     Cache.FlyRunning = false
     if Cache.FlyBodyGyro then pcall(function() Cache.FlyBodyGyro:Destroy() end); Cache.FlyBodyGyro = nil end
@@ -486,11 +1371,7 @@ local function setupAntiFling()
     end)
 end
 
--- ========================================
--- ===== VISUALS =====
--- ========================================
-
--- ESP
+-- VISUALS
 local function createOrUpdateHighlight(player, color)
     if not player or not player.Character then return end
     local char = player.Character
@@ -1080,11 +1961,7 @@ local function setupSky(skyName)
     notify("Небо", "Загружено: " .. skyName, 2)
 end
 
--- ========================================
--- ===== COMBAT =====
--- ========================================
-
--- FOV AIMBOT
+-- COMBAT
 local function getClosestMurderInFov()
     local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
     local bestP, bestDist = nil, math.huge
@@ -1500,10 +2377,7 @@ local function sheriffAutoShootLoop()
     end
 end
 
--- ========================================
--- ===== FARM =====
--- ========================================
-
+-- FARM
 local function getCurrentCoins()
     local ok, res = pcall(function()
         local gui = LocalPlayer.PlayerGui:FindFirstChild("MainGUI")
@@ -1642,10 +2516,7 @@ local function setupAutoFarm()
     end
 end
 
--- ========================================
--- ===== ANIMATION PACKS =====
--- ========================================
-
+-- ANIMATION PACKS
 local ANIM_PACKS = {
     ["Adidas Sports"] = {WalkAnim=18537392113, RunAnim=18537384940, JumpAnim=18537380791, FallAnim=18537367238, SwimIdle=18537387180, Swim=18537389531, Animation1=18537376492, Animation2=18537371272, ClimbAnim=18537363391},
     ["Adidas Community"] = {WalkAnim=122150855457006, RunAnim=82598234841035, JumpAnim=75290611992385, FallAnim=98600215928904, SwimIdle=109346520324160, Swim=133308483266208, Animation1=122257458498464, Animation2=102357151005774, ClimbAnim=88763136693023},
@@ -1722,10 +2593,7 @@ local function applyAnimPack(packName)
     return true
 end
 
--- ========================================
--- ===== ОСНОВНОЙ ЦИКЛ =====
--- ========================================
-
+-- ОСНОВНОЙ ЦИКЛ
 local function updateVisuals()
     for _, player in ipairs(Players:GetPlayers()) do
         if player == LocalPlayer then
@@ -1775,262 +2643,110 @@ local function startMainUpdate()
 end
 
 -- ========================================
--- ===== ПОСТРОЕНИЕ GUI =====
+-- ===== СОЗДАНИЕ ЛОАДЕРА =====
 -- ========================================
 
-local Window = NeverLose:CreateWindow({
+local Loader = NeverLose.new({
     Name = "Planet Hub",
     Content = "v3.0 Ultimate",
-    Logo = NeverLose.GlobalLogo,
-    Size = UDim2.fromOffset(800, 600),
-    Enable3DRenderer = false,
-    Keybind = Enum.KeyCode.J
+    Process = "Нажмите Login для загрузки",
+    Default = "",
+    Yield = true,
+    DefaultVersion = "Main",
+    Versions = {
+        {
+            Idx = "Main",
+            Name = "Planet Hub v3.0",
+            Content = "Полная версия с визуалами и аимом"
+        },
+        {
+            Idx = "Lite",
+            Name = "Planet Hub Lite",
+            Content = "Облегчённая версия без визуалов"
+        }
+    },
+    OnGetKey = function()
+        notify("Получение ключа", "https://example.com/getkey", 3)
+    end,
+    OnRedeem = function(key)
+        if key == "planet" or key == "12345" then
+            return true, "Добро пожаловать!"
+        else
+            return false, "Неверный ключ!"
+        end
+    end
 })
 
--- Visuals Tab
-local VisualsTab = Window:AddTab({Name = "Visuals", Icon = "eye"})
-
-local ESPSection = VisualsTab:AddSection({Name = "ESP", Position = "Left"})
-local MurderESP = ESPSection:AddToggle({Default = Settings.MurderESP, Flag = "MurderESP", Callback = function(v) Settings.MurderESP = v; startMainUpdate() end})
-ESPSection:AddColorPicker({Default = Settings.MurderColor, Flag = "MurderColor", Callback = function(c) Settings.MurderColor = c; startMainUpdate() end})
-local SheriffESP = ESPSection:AddToggle({Default = Settings.SheriffESP, Flag = "SheriffESP", Callback = function(v) Settings.SheriffESP = v; startMainUpdate() end})
-ESPSection:AddColorPicker({Default = Settings.SheriffColor, Flag = "SheriffColor", Callback = function(c) Settings.SheriffColor = c; startMainUpdate() end})
-local InnocentESP = ESPSection:AddToggle({Default = Settings.InnocentESP, Flag = "InnocentESP", Callback = function(v) Settings.InnocentESP = v; startMainUpdate() end})
-ESPSection:AddColorPicker({Default = Settings.InnocentColor, Flag = "InnocentColor", Callback = function(c) Settings.InnocentColor = c; startMainUpdate() end})
-local Tracers = ESPSection:AddToggle({Default = Settings.TracersEnabled, Flag = "Tracers", Callback = function(v)
-    Settings.TracersEnabled = v
-    if v then for _,p in ipairs(Players:GetPlayers()) do if p ~= LocalPlayer then createTracer(p) end end
-    else clearAllTracers() end
+-- Ждём активацию
+task.spawn(function()
+    local version = Loader:Await()
+    print("Загружена версия: " .. tostring(version))
+    
+    -- Запускаем основной функционал
     startMainUpdate()
-end})
-ESPSection:AddColorPicker({Default = Settings.TracersColor, Flag = "TracersColor", Callback = function(c)
-    Settings.TracersColor = c
-    for userId, line in pairs(Cache.Tracers) do line.Color = c end
-end})
-
-local ChamsSection = VisualsTab:AddSection({Name = "Chams", Position = "Right"})
-local Chams = ChamsSection:AddToggle({Default = Settings.ChamsEnabled, Flag = "Chams", Callback = function(v) Settings.ChamsEnabled = v; updateChamsForAll(); startMainUpdate() end})
-ChamsSection:AddColorPicker({Default = Settings.ChamsColor, Flag = "ChamsColor", Callback = function(c) Settings.ChamsColor = c; if Settings.ChamsEnabled then updateChamsForAll() end end})
-local RGBHumanoid = ChamsSection:AddToggle({Default = Settings.RGBHumanoid, Flag = "RGBHumanoid", Callback = function(v) Settings.RGBHumanoid = v; setupRGBHumanoid() end})
-
-local WorldSection = VisualsTab:AddSection({Name = "World", Position = "Left"})
-local TexturePack = WorldSection:AddToggle({Default = Settings.TexturePackEnabled, Flag = "TexturePack", Callback = function(v)
-    Settings.TexturePackEnabled = v
-    if v then applyTexturePack() else clearTexturePack() end
-end})
-local Orbiz = WorldSection:AddToggle({Default = Settings.OrbizEnabled, Flag = "Orbiz", Callback = function(v) Settings.OrbizEnabled = v; createOrbiz() end})
-WorldSection:AddTextInput({Default = "HD", Placeholder = "Sky Name / ID", Flag = "SkyInput", Callback = function(v) Settings.CustomSkyId = v end})
-WorldSection:AddButton({Name = "Apply Sky", Callback = function() if Settings.CustomSkyId and Settings.CustomSkyId ~= "" then setupSky(Settings.CustomSkyId) end end})
-WorldSection:AddButton({Name = "Remove Sky", Callback = function() removeSky() end})
-WorldSection:AddButton({Name = "Space", Callback = function() setupSky("Space") end})
-WorldSection:AddButton({Name = "Galaxy", Callback = function() setupSky("Galaxy") end})
-
-local EffectsSection = VisualsTab:AddSection({Name = "Effects", Position = "Right"})
-local JumpCircles = EffectsSection:AddToggle({Default = Settings.JumpCircles, Flag = "JumpCircles", Callback = function(v) Settings.JumpCircles = v; startMainUpdate() end})
-EffectsSection:AddColorPicker({Default = Settings.JumpCirclesColor, Flag = "JumpCirclesColor", Callback = function(c) Settings.JumpCirclesColor = c end})
-local Trails = EffectsSection:AddToggle({Default = Settings.Trails, Flag = "Trails", Callback = function(v) Settings.Trails = v; if v then createLocalPlayerTrail() else removeLocalPlayerTrail() end; startMainUpdate() end})
-EffectsSection:AddColorPicker({Default = Settings.TrailsColor, Flag = "TrailsColor", Callback = function(c) Settings.TrailsColor = c; if Cache.TrailAttachments.trail then Cache.TrailAttachments.trail.Color = ColorSequence.new(c) end end})
-local XRay = EffectsSection:AddToggle({Default = Settings.XRayEnabled, Flag = "XRay", Callback = function(v) Settings.XRayEnabled = v; setupXRay() end})
-local Bloom = EffectsSection:AddToggle({Default = Settings.BloomEnabled, Flag = "Bloom", Callback = function(v) Settings.BloomEnabled = v; setupBloom(v) end})
-local ColorCorrection = EffectsSection:AddToggle({Default = Settings.ColorCorrectionEnabled, Flag = "ColorCorrection", Callback = function(v) Settings.ColorCorrectionEnabled = v; setupColorCorrection(v) end})
-local Vignette = EffectsSection:AddToggle({Default = Settings.VignetteEnabled, Flag = "Vignette", Callback = function(v) Settings.VignetteEnabled = v; setupVignette(v) end})
-
-local ChinaHatSection = VisualsTab:AddSection({Name = "China Hat", Position = "Left"})
-local ChinaHat = ChinaHatSection:AddToggle({Default = Settings.ChinaHatEnabled, Flag = "ChinaHat", Callback = function(v) toggleChinaHat(v) end})
-ChinaHatSection:AddColorPicker({Default = Settings.ChinaHatColor, Flag = "ChinaHatColor", Callback = function(c) Settings.ChinaHatColor = c end})
-ChinaHatSection:AddTextInput({Default = "Classic", Placeholder = "Classic / Drawing", Flag = "ChinaHatStyle", Callback = function(v)
-    if v == "Classic" or v == "Drawing" then
-        local wasEnabled = Settings.ChinaHatEnabled
-        Settings.ChinaHatStyle = v
-        if wasEnabled then toggleChinaHat(false); task.wait(0.1); toggleChinaHat(true) end
-        notify("China Hat", "Стиль: " .. v, 2)
-    else
-        notify("China Hat", "Доступно: Classic, Drawing", 2)
-    end
-end})
-ChinaHatSection:AddTextInput({Default = "0.3", Placeholder = "Transparency (0-1)", Flag = "ChinaHatTransparency", Callback = function(v)
-    local n = tonumber(v)
-    if n then Settings.ChinaHatTransparency = math.clamp(n, 0, 1) end
-end})
-ChinaHatSection:AddTextInput({Default = "2.4", Placeholder = "Radius", Flag = "ChinaHatRadius", Callback = function(v)
-    local n = tonumber(v)
-    if n then Settings.ChinaHatRadius = math.max(n, 0.5) end
-end})
-ChinaHatSection:AddTextInput({Default = "1.6", Placeholder = "Height", Flag = "ChinaHatHeight", Callback = function(v)
-    local n = tonumber(v)
-    if n then Settings.ChinaHatHeight = math.max(n, 0.5) end
-end})
-local ChinaHatRainbow = ChinaHatSection:AddToggle({Default = Settings.ChinaHatRainbow, Flag = "ChinaHatRainbow", Callback = function(v) Settings.ChinaHatRainbow = v end})
-
-local AuraSection = VisualsTab:AddSection({Name = "Aura", Position = "Right"})
-local Aura = AuraSection:AddToggle({Default = Settings.AuraEnabled, Flag = "Aura", Callback = function(v) Settings.AuraEnabled = v; if v then applyAura() else clearAura() end end})
-AuraSection:AddColorPicker({Default = Settings.AuraColor, Flag = "AuraColor", Callback = function(c) Settings.AuraColor = c; if Settings.AuraEnabled then applyAura() end end})
-for _, name in ipairs(AURA_ORDER) do
-    AuraSection:AddToggle({Default = AuraSelected[name], Flag = "Aura_" .. name, Callback = function(v)
-        AuraSelected[name] = v
-        if Settings.AuraEnabled then applyAura() end
-    end})
-end
-
-local StretchSection = VisualsTab:AddSection({Name = "Screen Stretch", Position = "Left"})
-local Stretch = StretchSection:AddToggle({Default = Settings.StretchEnabled, Flag = "Stretch", Callback = function(v) Settings.StretchEnabled = v; applyStretch(v) end})
-StretchSection:AddSlider({Default = 75, Min = 50, Max = 100, Flag = "StretchFactor", Callback = function(v) Settings.StretchFactor = v / 100; if Settings.StretchEnabled then applyStretch(true) end end})
-
--- Combat Tab
-local CombatTab = Window:AddTab({Name = "Combat", Icon = "crosshairs"})
-
-local CombatSection = CombatTab:AddSection({Name = "Combat", Position = "Left"})
-local ShootButton = CombatSection:AddToggle({Default = Settings.ShootButtonEnabled, Flag = "ShootButton", Callback = function(v)
-    Settings.ShootButtonEnabled = v
-    if v then createShootButton() else if Cache.ShootButton then pcall(function() Cache.ShootButton:Destroy() end); Cache.ShootButton = nil end end
-end})
-local SheriffAutoShoot = CombatSection:AddToggle({Default = Settings.SheriffAutoShootEnabled, Flag = "SheriffAutoShoot", Callback = function(v)
-    Settings.SheriffAutoShootEnabled = v
-    safeDisconnect(Cache.SheriffAutoShootConnection); Cache.SheriffAutoShootConnection = nil
-    if v then Cache.SheriffAutoShootConnection = task.spawn(sheriffAutoShootLoop) end
-end})
-local KillAll = CombatSection:AddToggle({Default = Settings.KillAllEnabled, Flag = "KillAll", Callback = function(v)
-    Settings.KillAllEnabled = v
-    if v then if not Cache.KillAllRemote then FindKillRemote() end; setupKillAll() else safeDisconnect(Cache.KillAllConn); end
-end})
-local FlingMurderer = CombatSection:AddToggle({Default = Settings.FlingMurderer, Flag = "FlingMurderer", Callback = function(v)
-    Settings.FlingMurderer = v
-    if v then local m = getMurdererFling(); if m then flingPlayer(m) else notify("Флинг", "Убийца не найден!", 2); Settings.FlingMurderer = false end end
-end})
-local FlingSheriff = CombatSection:AddToggle({Default = Settings.FlingSheriff, Flag = "FlingSheriff", Callback = function(v)
-    Settings.FlingSheriff = v
-    if v then local s = getSheriffFling(); if s then flingPlayer(s) else notify("Флинг", "Шериф не найден!", 2); Settings.FlingSheriff = false end end
-end})
-local GrabGun = CombatSection:AddToggle({Default = Settings.GrabGunEnabled, Flag = "GrabGun", Callback = function(v)
-    Settings.GrabGunEnabled = v
-    if v then grabGunImproved() end
-end})
-
-local AimbotSection = CombatTab:AddSection({Name = "Aimbot", Position = "Right"})
-local FovAimbot = AimbotSection:AddToggle({Default = Settings.FovAimbotEnabled, Flag = "FovAimbot", Callback = function(v)
-    Settings.FovAimbotEnabled = v
-    if v then createFovCircle() end
-    setupFovAimbot()
-end})
-AimbotSection:AddSlider({Default = 120, Min = 10, Max = 600, Flag = "FovRadius", Callback = function(v)
-    Settings.FovRadius = v
-    if Cache.FovCircle then Cache.FovCircle.Radius = Settings.FovRadius end
-end})
-AimbotSection:AddSlider({Default = 50, Min = 1, Max = 100, Flag = "AimSmoothness", Callback = function(v) Settings.AimSmoothness = v / 100 end})
-local AimPredict = AimbotSection:AddToggle({Default = Settings.AimPredict, Flag = "AimPredict", Callback = function(v) Settings.AimPredict = v end})
-local AimWallCheck = AimbotSection:AddToggle({Default = Settings.AimWallCheck, Flag = "AimWallCheck", Callback = function(v) Settings.AimWallCheck = v end})
-
-local TeleportsSection = CombatTab:AddSection({Name = "Teleports", Position = "Left"})
-TeleportsSection:AddButton({Name = "TP to Murder", Callback = function()
-    if not LocalPlayer.Character then return end
-    local myHRP = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if not myHRP then return end
-    local target, targetDist = nil, math.huge
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Character and checkKnife(player) then
-            local hrp = player.Character:FindFirstChild("HumanoidRootPart")
-            if hrp then
-                local dist = (myHRP.Position - hrp.Position).Magnitude
-                if dist < targetDist then targetDist = dist; target = player end
+    createFovCircle()
+    createChinaHatDrawings()
+    setupFlyKeys()
+    
+    -- Обработка событий игроков
+    Players.PlayerAdded:Connect(function(player)
+        player.CharacterAdded:Connect(function()
+            task.wait(0.5)
+            if Settings.ChamsEnabled then cacheCharacterParts(player); applyChams(player) end
+            if Settings.TracersEnabled and player ~= LocalPlayer then createTracer(player) end
+            if Settings.MurderESP or Settings.SheriffESP or Settings.InnocentESP then
+                local r = getRole(player)
+                if Settings.MurderESP and r == "Убийца" then createOrUpdateHighlight(player, Settings.MurderColor)
+                elseif Settings.SheriffESP and r == "Шериф" then createOrUpdateHighlight(player, Settings.SheriffColor)
+                elseif Settings.InnocentESP and r == "Невинный" then createOrUpdateHighlight(player, Settings.InnocentColor) end
             end
-        end
-    end
-    if not target then notify("Телепорт", "Убийца не найден", 2); return end
-    local tHRP = target.Character:FindFirstChild("HumanoidRootPart")
-    if tHRP then myHRP.CFrame = tHRP.CFrame * CFrame.new(0, 3, 2); notify("Телепорт", "Телепорт к убийце", 2) end
-end})
-TeleportsSection:AddButton({Name = "TP to Sheriff", Callback = function()
-    if not LocalPlayer.Character then return end
-    local myHRP = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    if not myHRP then return end
-    local target, targetDist = nil, math.huge
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Character and checkGun(player) then
-            local hrp = player.Character:FindFirstChild("HumanoidRootPart")
-            if hrp then
-                local dist = (myHRP.Position - hrp.Position).Magnitude
-                if dist < targetDist then targetDist = dist; target = player end
-            end
-        end
-    end
-    if not target then notify("Телепорт", "Шериф не найден", 2); return end
-    local tHRP = target.Character:FindFirstChild("HumanoidRootPart")
-    if tHRP then myHRP.CFrame = tHRP.CFrame * CFrame.new(0, 3, 2); notify("Телепорт", "Телепорт к шерифу", 2) end
-end})
-
--- Movement Tab
-local MovementTab = Window:AddTab({Name = "Movement", Icon = "wind"})
-
-local MovementSection = MovementTab:AddSection({Name = "Movement", Position = "Left"})
-local Fly = MovementSection:AddToggle({Default = Settings.FlyEnabled, Flag = "Fly", Callback = function(v) toggleFly(v) end})
-MovementSection:AddSlider({Default = 50, Min = 10, Max = 200, Flag = "FlySpeed", Callback = function(v) Settings.FlySpeed = v end})
-local BHop = MovementSection:AddToggle({Default = Settings.BHopEnabled, Flag = "BHop", Callback = function(v) toggleBHop(v) end})
-MovementSection:AddSlider({Default = 30, Min = 10, Max = 80, Flag = "BHopSpeed", Callback = function(v) Settings.BHopSpeed = v end})
-local SpinBot = MovementSection:AddToggle({Default = Settings.SpinBotEnabled, Flag = "SpinBot", Callback = function(v) Settings.SpinBotEnabled = v; toggleSpinBot(v) end})
-MovementSection:AddSlider({Default = 9999, Min = 100, Max = 20000, Flag = "SpinSpeed", Callback = function(v) SpinBot.Speed = v end})
-local Noclip = MovementSection:AddToggle({Default = Settings.NoclipEnabled, Flag = "Noclip", Callback = function(v) Settings.NoclipEnabled = v; setupNoclip(v) end})
-local AntiFling = MovementSection:AddToggle({Default = Settings.AntiFlingEnabled, Flag = "AntiFling", Callback = function(v) Settings.AntiFlingEnabled = v; setupAntiFling() end})
-local WallHop = MovementSection:AddToggle({Default = Settings.WallHopEnabled, Flag = "WallHop", Callback = function(v) toggleWallHop(v) end})
-
--- Farm Tab
-local FarmTab = Window:AddTab({Name = "Farm", Icon = "tractor"})
-
-local FarmSection = FarmTab:AddSection({Name = "Auto Farm", Position = "Left"})
-local AutoFarm = FarmSection:AddToggle({Default = Settings.AutoFarmEnabled, Flag = "AutoFarm", Callback = function(v) Settings.AutoFarmEnabled = v; setupAutoFarm() end})
-local AutoRespawn = FarmSection:AddToggle({Default = Settings.AutoRespawn, Flag = "AutoRespawn", Callback = function(v) Settings.AutoRespawn = v end})
-FarmSection:AddSlider({Default = 20, Min = 5, Max = 50, Flag = "FarmSpeed", Callback = function(v) Settings.AutoFarmSpeed = v end})
-FarmSection:AddSlider({Default = 40, Min = 10, Max = 100, Flag = "CoinLimit", Callback = function(v) Settings.AutoFarmCoinLimit = v end})
-FarmSection:AddSlider({Default = 15, Min = 5, Max = 50, Flag = "CoinDelay", Callback = function(v) Settings.AutoFarmCoinDelay = v / 100 end})
-
--- Animations Tab
-local AnimationsTab = Window:AddTab({Name = "Animations", Icon = "music"})
-
-local AnimSection = AnimationsTab:AddSection({Name = "Animation Packs", Position = "Left"})
-local AnimPackEnabled = AnimSection:AddToggle({Default = Settings.AnimPackEnabled, Flag = "AnimPackEnabled", Callback = function(v)
-    Settings.AnimPackEnabled = v
-    if v and Settings.AnimPack ~= "" then applyAnimPack(Settings.AnimPack) end
-end})
-
-local AnimGridSection = AnimationsTab:AddSection({Name = "Select Pack", Position = "Right"})
-for _, packName in ipairs(ANIM_PACK_NAMES) do
-    AnimGridSection:AddButton({Name = packName, Callback = function()
-        Settings.AnimPack = packName
-        if Settings.AnimPackEnabled then
-            applyAnimPack(packName)
-            notify("Анимации", "Применено: " .. packName, 2)
-        else
-            Settings.AnimPackEnabled = true
-            applyAnimPack(packName)
-            notify("Анимации", "Применено: " .. packName, 2)
-        end
-    end})
-end
-
--- Fun Tab
-local FunTab = Window:AddTab({Name = "Fun", Icon = "smile"})
-
-local FunSection = FunTab:AddSection({Name = "Fun", Position = "Left"})
-local Jerk = FunSection:AddToggle({Default = Settings.JerkEnabled, Flag = "Jerk", Callback = function(v)
-    Settings.JerkEnabled = v
-    if v then
-        if Cache.JerkConnection then Cache.JerkConnection:Disconnect() end
-        Cache.JerkConnection = RunService.Heartbeat:Connect(function()
-            if not LocalPlayer.Character then return end
-            local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-            if hrp then hrp.AssemblyLinearVelocity = Vector3.new(math.random(-50,50), math.random(-30,30), math.random(-50,50)) end
         end)
-    else
-        if Cache.JerkConnection then Cache.JerkConnection:Disconnect() end; Cache.JerkConnection = nil
-    end
-end})
-local AntiAFK = FunSection:AddToggle({Default = Settings.AntiAFKEnabled, Flag = "AntiAFK", Callback = function(v) Settings.AntiAFKEnabled = v; setupAntiAFK() end})
-FunSection:AddButton({Name = "Rejoin", Callback = function()
-    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
-end})
+    end)
 
--- Запуск
-startMainUpdate()
-createFovCircle()
-createChinaHatDrawings()
+    LocalPlayer.CharacterAdded:Connect(function()
+        task.wait(0.5)
+        clearAllHighlights()
+        clearAllChams()
+        clearAllTracers()
+        Cache.ChamsPartsList = {}
+        removeCore()
+        
+        for _, player in ipairs(Players:GetPlayers()) do
+            if Settings.ChamsEnabled then cacheCharacterParts(player); applyChams(player) end
+            if Settings.TracersEnabled and player ~= LocalPlayer then createTracer(player) end
+            if Settings.MurderESP or Settings.SheriffESP or Settings.InnocentESP then
+                local r = getRole(player)
+                if Settings.MurderESP and r == "Убийца" then createOrUpdateHighlight(player, Settings.MurderColor)
+                elseif Settings.SheriffESP and r == "Шериф" then createOrUpdateHighlight(player, Settings.SheriffColor)
+                elseif Settings.InnocentESP and r == "Невинный" then createOrUpdateHighlight(player, Settings.InnocentColor) end
+            end
+        end
+        
+        setupRGBHumanoid()
+        Cache.JumpTracking = {wasJumping = false}
+        
+        if Settings.Trails then task.wait(0.1); createLocalPlayerTrail() end
+        if Settings.FlyEnabled then task.wait(0.5); startFly() end
+        if Settings.BHopEnabled then startBHop() end
+        if Settings.AntiFlingEnabled then setupAntiFling() end
+        if Settings.FovAimbotEnabled then setupFovAimbot() end
+        if Settings.ShootButtonEnabled then createShootButton() end
+        if Settings.WallHopEnabled then toggleWallHop(true) end
+        if Settings.SheriffAutoShootEnabled then Cache.SheriffAutoShootConnection = task.spawn(sheriffAutoShootLoop) end
+        if Settings.TexturePackEnabled then task.wait(0.3); applyTexturePack() end
+        if Settings.ChinaHatEnabled then task.wait(0.2); if Settings.ChinaHatStyle == "Classic" then hatAddClassic(LocalPlayer.Character) end end
+        if Settings.AuraEnabled then task.wait(0.3); applyAura() end
+        if Settings.OrbizEnabled then task.wait(0.2); createOrbiz() end
+        if Settings.KillAllEnabled then task.wait(0.2); if not Cache.KillAllRemote then FindKillRemote() end; setupKillAll() end
+        if Settings.AnimPackEnabled and Settings.AnimPack ~= "" then task.wait(0.3); applyAnimPack(Settings.AnimPack) end
+    end)
 
-notify("Planet Hub", "Загружен! Нажми J", 4)
+    notify("Planet Hub", "Загружен! Нажми J для меню", 4)
+    print("✅ PLANET HUB v3.0 LOADED!")
+    
+    -- Закрываем лоадер после загрузки
+    task.wait(1)
+    Loader:Unload()
+end)
+
+return Loader
