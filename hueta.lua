@@ -1,5 +1,5 @@
 -- ========================================
--- ===== NEVERLOSE LOADER (ТОЛЬКО КЛЮЧИ) =====
+-- ===== NEVERLOSE LOADER (АВТОИНЖЕКТ) =====
 -- ========================================
 
 do
@@ -30,7 +30,6 @@ local ManualTween = TweenInfo.new(0.1);
 local SlowyTween = TweenInfo.new(0.175);
 local FastTween = TweenInfo.new(0.05);
 local VSlowTween = TweenInfo.new(0.5,Enum.EasingStyle.Quint);
-local Encryption = {};
 
 NeverLose.RandomString = LPH_NO_VIRTUALIZE(function()
 	return string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4))..string.rep(string.char(math.random(1,7)),math.random(1,4));
@@ -586,17 +585,14 @@ function NeverLose.new(Config)
 		if keyPressed then return end
 		keyPressed = true
 		
-		-- Меняем текст
 		Content.Text = "Text copied!"
 		Content.TextSize = 11
 		Content.TextColor3 = Color3.fromRGB(100, 255, 100)
 		Icon.Text = "check"
 		
-		-- Копируем ссылку в буфер обмена
 		local link = "https://t.me/planethubgithub"
 		setclipboard(link)
 		
-		-- Возвращаем через 2 секунды
 		task.delay(2, function()
 			Content.Text = "Get Key"
 			Content.TextSize = 15
@@ -620,12 +616,11 @@ function NeverLose.new(Config)
 
 		if check then
 			TextBox.TextEditable = false;
-
 			LoaderLib.MarkLoad.SetValue(true);
-
 			task.wait(0.1);
-
-			return LoaderLib.YieldEvent:Fire(TextBox.Text);
+			LoaderLib.YieldEvent:Fire(TextBox.Text);
+			LoaderLib:Unload();
+			return;
 		else
 			if rason then
 				TextBox.Text = tostring(rason);
@@ -778,7 +773,7 @@ function NeverLose.new(Config)
 				TextTransparency = 1
 			})
 
-				NeverLose.PlayAnimate(RedeemFrame,SlowyTween , {
+			NeverLose.PlayAnimate(RedeemFrame,SlowyTween , {
 				BackgroundTransparency = 1
 			})
 
@@ -830,8 +825,18 @@ function NeverLose:Unload()
 end;
 
 -- ========================================
--- ===== ЗАПУСК ЛОАДЕРА =====
+-- ===== ЗАПУСК ЛОАДЕРА С ИНЖЕКТОМ =====
 -- ========================================
+
+local function notify(title, content, duration)
+    pcall(function()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = title,
+            Text = content,
+            Duration = duration or 3,
+        })
+    end)
+end
 
 local Loader = NeverLose.new({
 	Name = "Planet Hub",
@@ -840,11 +845,9 @@ local Loader = NeverLose.new({
 	Default = "",
 	Yield = true,
 	DefaultVersion = "Main",
-	OnGetKey = function()
-		-- Пустая функция, т.к. обработка внутри
-	end,
+	OnGetKey = function() end,
 	OnRedeem = function(key)
-		if key == "planethubez" or key == "CZSX-ZXCC-J98A" or key == "IOAN-0CJAK-KDIA" then
+		if key == "planet" or key == "12345" or key == "1" then
 			return true, "Добро пожаловать!"
 		else
 			return false, "Неверный ключ!"
@@ -856,10 +859,10 @@ task.spawn(function()
 	local result = Loader:Await()
 	print("✅ Активировано! Ключ: " .. tostring(result))
 	
-	-- ЗДЕСЬ ТЫ МОЖЕШЬ ЗАГРУЗИТЬ СВОЙ СКРИПТ
-	-- loadstring(game:HttpGet("https://raw.githubusercontent.com/ТВОЙ_РЕПОЗИТОРИЙ/скрипт.lua"))()
+	-- ИНЖЕКТ ОСНОВНОГО СКРИПТА
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/mopsech/final/main/v1.lua"))()
 	
-	notify("Успех!", "Ключ принят! Загрузка...", 3)
+	notify("Успех!", "Скрипт загружен!", 3)
 	
 	task.wait(1)
 	Loader:Unload()
