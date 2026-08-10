@@ -344,7 +344,6 @@ function NeverLose.new(Config)
 		Default = "",
 		Yield = true,
 		DefaultVersion = nil,
-		Versions = {},
 		OnGetKey = function() end,
 		OnRedeem = function() end,
 	});
@@ -579,132 +578,7 @@ function NeverLose.new(Config)
 	Icon_2.TextTransparency = 0.250
 	Icon_2.TextWrapped = true
 
-	local VersionItems = {};
 	LoaderLib.Renderer = {};
-
-	for i,v in next , Config.Versions do
-		local VersionProcess = {};
-
-		VersionItems[v.Idx] = VersionProcess;
-
-		local VersionFrame = Instance.new("Frame")
-		local UIStroke = Instance.new("UIStroke")
-		local UICorner = Instance.new("UICorner")
-		local VersionContent = Instance.new("TextLabel")
-		local VersionName = Instance.new("TextLabel")
-
-		VersionFrame.Name = NeverLose.RandomString();
-		VersionFrame.Parent = ScrollingFrame
-		VersionFrame.BackgroundColor3 = Color3.fromRGB(20, 22, 27)
-		VersionFrame.BackgroundTransparency = 0.050
-		VersionFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		VersionFrame.BorderSizePixel = 0
-		VersionFrame.Size = UDim2.new(1, -10, 0, 50)
-		VersionFrame.ZIndex = 15
-
-		UIStroke.Transparency = 0.650
-		UIStroke.Color = Color3.fromRGB(45, 48, 58)
-		UIStroke.Parent = VersionFrame
-
-		UICorner.Parent = VersionFrame
-
-		VersionContent.Name = "VersionContent"
-		VersionContent.Parent = VersionFrame
-		VersionContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		VersionContent.BackgroundTransparency = 1.000
-		VersionContent.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		VersionContent.BorderSizePixel = 0
-		VersionContent.Position = UDim2.new(0, 15, 0, 27)
-		VersionContent.Size = UDim2.new(0, 200, 0, 15)
-		VersionContent.ZIndex = 16
-		VersionContent.Font = Enum.Font.GothamBold
-		VersionContent.Text = v.Content
-		VersionContent.TextColor3 = Color3.fromRGB(255, 255, 255)
-		VersionContent.TextSize = 12.000
-		VersionContent.TextTransparency = 0.650
-		VersionContent.TextXAlignment = Enum.TextXAlignment.Left
-
-		VersionName.Name = NeverLose.RandomString();
-		VersionName.Parent = VersionFrame
-		VersionName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		VersionName.BackgroundTransparency = 1.000
-		VersionName.BorderColor3 = Color3.fromRGB(0, 0, 0)
-		VersionName.BorderSizePixel = 0
-		VersionName.Position = UDim2.new(0, 15, 0, 4)
-		VersionName.Size = UDim2.new(0, 200, 0, 25)
-		VersionName.ZIndex = 16
-		VersionName.Font = Enum.Font.GothamBold
-		VersionName.Text = v.Name
-		VersionName.TextColor3 = Color3.fromRGB(255, 255, 255)
-		VersionName.TextSize = 18.000
-		VersionName.TextTransparency = 0.200
-		VersionName.TextXAlignment = Enum.TextXAlignment.Left;
-
-		VersionProcess.SetRender = LPH_NO_VIRTUALIZE(function(value)
-			if value then
-				NeverLose.PlayAnimate(VersionFrame,SlowyTween , {
-					BackgroundTransparency = 0.050
-				})
-
-				NeverLose.PlayAnimate(UIStroke,SlowyTween , {
-					Transparency = 0.650
-				})
-
-				NeverLose.PlayAnimate(VersionContent,SlowyTween , {
-					TextTransparency = 0.650
-				})
-
-				NeverLose.PlayAnimate(VersionName,SlowyTween , {
-					TextTransparency = 0.200
-				})
-
-				VersionProcess.Match();
-			else
-				NeverLose.PlayAnimate(VersionFrame,SlowyTween , {
-					BackgroundTransparency = 1
-				})
-
-				NeverLose.PlayAnimate(UIStroke,SlowyTween , {
-					Transparency = 1
-				})
-
-				NeverLose.PlayAnimate(VersionContent,SlowyTween , {
-					TextTransparency = 1
-				})
-
-				NeverLose.PlayAnimate(VersionName,SlowyTween , {
-					TextTransparency = 1
-				})
-			end;
-		end);
-
-		table.insert(LoaderLib.Renderer,VersionProcess.SetRender);
-
-		VersionProcess.Match = LPH_NO_VIRTUALIZE(function()
-			if Config.DefaultVersion == v.Idx then
-				NeverLose.PlayAnimate(VersionFrame,SlowyTween , {
-					BackgroundColor3 = NeverLose.AccentColor,
-					BackgroundTransparency = 0.5
-				})
-			else
-				NeverLose.PlayAnimate(VersionFrame,SlowyTween , {
-					BackgroundColor3 = Color3.fromRGB(20, 22, 27),
-					BackgroundTransparency = 0.050
-				})
-			end;
-		end);
-
-		NeverLose:AddSignal(NeverLose:CreateInput(VersionFrame,function()
-			Config.DefaultVersion = v.Idx;
-
-			for i,v in next , VersionItems do
-				v.Match();
-			end;
-		end))
-
-		VersionProcess.Match();
-		VersionProcess.SetRender(false);
-	end;
 
 	NeverLose:AddSignal(NeverLose:CreateInput(KeyFrame,function()
 		return Config.OnGetKey();
@@ -727,7 +601,7 @@ function NeverLose.new(Config)
 
 			task.wait(0.1);
 
-			return LoaderLib.YieldEvent:Fire(Config.DefaultVersion or TextBox.Text);
+			return LoaderLib.YieldEvent:Fire(TextBox.Text);
 		else
 			if rason then
 				TextBox.Text = tostring(rason);
@@ -838,10 +712,6 @@ function NeverLose.new(Config)
 				TextTransparency = 0.250
 			})
 
-			for i,Render in next , LoaderLib.Renderer do
-				Render(true);
-			end;
-
 			Shadow:Render(true);
 		else
 			NeverLose.PlayAnimate(LoaderFrame,SlowyTween , {
@@ -900,10 +770,6 @@ function NeverLose.new(Config)
 				TextTransparency = 1
 			})
 
-			for i,Render in next , LoaderLib.Renderer do
-				Render(false);
-			end;
-
 			LoaderLib.MarkLoad.SetValue(false);
 			Shadow:Render(false);
 		end;
@@ -940,7 +806,7 @@ function NeverLose:Unload()
 end;
 
 -- ========================================
--- ===== НАСТРОЙКИ PLANET HUB =====
+-- ===== PLANET HUB v3.0 ULTIMATE =====
 -- ========================================
 
 local function breakScope() end
@@ -1012,6 +878,7 @@ local Settings = {
 local Cache = {
     FlyKeys = {F=0, B=0, L=0, R=0},
     FlyRunning = false, FlyBodyGyro = nil, FlyBodyVelocity = nil,
+    FlyKeyConn = nil, FlyKeyEndConn = nil, FlyConn = nil,
     BHopConn = nil, BHopBV = nil, BHopActive = false,
     Highlights = {},
     ChamsPartsList = {},
@@ -1172,6 +1039,27 @@ local function equipGun()
     return false
 end
 
+-- ФУНКЦИЯ НАСТРОЙКИ КЛАВИШ FLY
+local function setupFlyKeys()
+    safeDisconnect(Cache.FlyKeyConn); safeDisconnect(Cache.FlyKeyEndConn)
+    Cache.FlyKeyConn = UserInputService.InputBegan:Connect(function(input, gp)
+        if gp or not Cache.FlyRunning then return end
+        local k = input.KeyCode
+        if k == Enum.KeyCode.W then Cache.FlyKeys.F = 1
+        elseif k == Enum.KeyCode.S then Cache.FlyKeys.B = 1
+        elseif k == Enum.KeyCode.A then Cache.FlyKeys.L = 1
+        elseif k == Enum.KeyCode.D then Cache.FlyKeys.R = 1 end
+    end)
+    Cache.FlyKeyEndConn = UserInputService.InputEnded:Connect(function(input, gp)
+        if gp or not Cache.FlyRunning then return end
+        local k = input.KeyCode
+        if k == Enum.KeyCode.W then Cache.FlyKeys.F = 0
+        elseif k == Enum.KeyCode.S then Cache.FlyKeys.B = 0
+        elseif k == Enum.KeyCode.A then Cache.FlyKeys.L = 0
+        elseif k == Enum.KeyCode.D then Cache.FlyKeys.R = 0 end
+    end)
+end
+
 -- ФУНКЦИИ ДВИЖЕНИЯ
 local function stopFly()
     Cache.FlyRunning = false
@@ -1219,26 +1107,6 @@ local function startFly()
     end)
     setupFlyKeys()
     notify("Fly", "Включен (WASD)", 2)
-end
-
-local function setupFlyKeys()
-    safeDisconnect(Cache.FlyKeyConn); safeDisconnect(Cache.FlyKeyEndConn)
-    Cache.FlyKeyConn = UserInputService.InputBegan:Connect(function(input, gp)
-        if gp or not Cache.FlyRunning then return end
-        local k = input.KeyCode
-        if k == Enum.KeyCode.W then Cache.FlyKeys.F = 1
-        elseif k == Enum.KeyCode.S then Cache.FlyKeys.B = 1
-        elseif k == Enum.KeyCode.A then Cache.FlyKeys.L = 1
-        elseif k == Enum.KeyCode.D then Cache.FlyKeys.R = 1 end
-    end)
-    Cache.FlyKeyEndConn = UserInputService.InputEnded:Connect(function(input, gp)
-        if gp or not Cache.FlyRunning then return end
-        local k = input.KeyCode
-        if k == Enum.KeyCode.W then Cache.FlyKeys.F = 0
-        elseif k == Enum.KeyCode.S then Cache.FlyKeys.B = 0
-        elseif k == Enum.KeyCode.A then Cache.FlyKeys.L = 0
-        elseif k == Enum.KeyCode.D then Cache.FlyKeys.R = 0 end
-    end)
 end
 
 local function toggleFly(value)
@@ -2643,33 +2511,214 @@ local function startMainUpdate()
 end
 
 -- ========================================
--- ===== СОЗДАНИЕ ЛОАДЕРА =====
+-- ===== СОЗДАНИЕ НЕVERLOSE GUI =====
+-- ========================================
+
+-- ОБЪЯВЛЯЕМ ПЕРЕМЕННУЮ ДЛЯ МЕНЮ
+local Window = nil
+local menuOpen = false
+
+-- ФУНКЦИЯ СОЗДАНИЯ МЕНЮ
+local function createMenu()
+    if Window then return end
+    
+    Window = NeverLose:CreateWindow({
+        Name = "Planet Hub",
+        Content = "v3.0 Ultimate",
+        Logo = NeverLose.GlobalLogo,
+        Size = UDim2.fromOffset(800, 600),
+        Enable3DRenderer = false,
+        Keybind = Enum.KeyCode.J  -- Открытие по клавише J
+    })
+    
+    -- Visuals Tab
+    local VisualsTab = Window:AddTab({Name = "Visuals", Icon = "eye"})
+    
+    local ESPSection = VisualsTab:AddSection({Name = "ESP", Position = "Left"})
+    ESPSection:AddToggle({Default = Settings.MurderESP, Flag = "MurderESP", Callback = function(v) Settings.MurderESP = v; startMainUpdate() end})
+    ESPSection:AddColorPicker({Default = Settings.MurderColor, Flag = "MurderColor", Callback = function(c) Settings.MurderColor = c; startMainUpdate() end})
+    ESPSection:AddToggle({Default = Settings.SheriffESP, Flag = "SheriffESP", Callback = function(v) Settings.SheriffESP = v; startMainUpdate() end})
+    ESPSection:AddColorPicker({Default = Settings.SheriffColor, Flag = "SheriffColor", Callback = function(c) Settings.SheriffColor = c; startMainUpdate() end})
+    ESPSection:AddToggle({Default = Settings.InnocentESP, Flag = "InnocentESP", Callback = function(v) Settings.InnocentESP = v; startMainUpdate() end})
+    ESPSection:AddColorPicker({Default = Settings.InnocentColor, Flag = "InnocentColor", Callback = function(c) Settings.InnocentColor = c; startMainUpdate() end})
+    ESPSection:AddToggle({Default = Settings.TracersEnabled, Flag = "Tracers", Callback = function(v)
+        Settings.TracersEnabled = v
+        if v then for _,p in ipairs(Players:GetPlayers()) do if p ~= LocalPlayer then createTracer(p) end end
+        else clearAllTracers() end
+        startMainUpdate()
+    end})
+    ESPSection:AddColorPicker({Default = Settings.TracersColor, Flag = "TracersColor", Callback = function(c)
+        Settings.TracersColor = c
+        for userId, line in pairs(Cache.Tracers) do line.Color = c end
+    end})
+    
+    local ChamsSection = VisualsTab:AddSection({Name = "Chams", Position = "Right"})
+    ChamsSection:AddToggle({Default = Settings.ChamsEnabled, Flag = "Chams", Callback = function(v) Settings.ChamsEnabled = v; updateChamsForAll(); startMainUpdate() end})
+    ChamsSection:AddColorPicker({Default = Settings.ChamsColor, Flag = "ChamsColor", Callback = function(c) Settings.ChamsColor = c; if Settings.ChamsEnabled then updateChamsForAll() end end})
+    ChamsSection:AddToggle({Default = Settings.RGBHumanoid, Flag = "RGBHumanoid", Callback = function(v) Settings.RGBHumanoid = v; setupRGBHumanoid() end})
+    
+    local EffectsSection = VisualsTab:AddSection({Name = "Effects", Position = "Left"})
+    EffectsSection:AddToggle({Default = Settings.JumpCircles, Flag = "JumpCircles", Callback = function(v) Settings.JumpCircles = v; startMainUpdate() end})
+    EffectsSection:AddColorPicker({Default = Settings.JumpCirclesColor, Flag = "JumpCirclesColor", Callback = function(c) Settings.JumpCirclesColor = c end})
+    EffectsSection:AddToggle({Default = Settings.Trails, Flag = "Trails", Callback = function(v) Settings.Trails = v; if v then createLocalPlayerTrail() else removeLocalPlayerTrail() end; startMainUpdate() end})
+    EffectsSection:AddColorPicker({Default = Settings.TrailsColor, Flag = "TrailsColor", Callback = function(c) Settings.TrailsColor = c; if Cache.TrailAttachments.trail then Cache.TrailAttachments.trail.Color = ColorSequence.new(c) end end})
+    EffectsSection:AddToggle({Default = Settings.XRayEnabled, Flag = "XRay", Callback = function(v) Settings.XRayEnabled = v; setupXRay() end})
+    EffectsSection:AddToggle({Default = Settings.BloomEnabled, Flag = "Bloom", Callback = function(v) Settings.BloomEnabled = v; setupBloom(v) end})
+    EffectsSection:AddToggle({Default = Settings.VignetteEnabled, Flag = "Vignette", Callback = function(v) Settings.VignetteEnabled = v; setupVignette(v) end})
+    
+    local ChinaHatSection = VisualsTab:AddSection({Name = "China Hat", Position = "Right"})
+    ChinaHatSection:AddToggle({Default = Settings.ChinaHatEnabled, Flag = "ChinaHat", Callback = function(v) toggleChinaHat(v) end})
+    ChinaHatSection:AddColorPicker({Default = Settings.ChinaHatColor, Flag = "ChinaHatColor", Callback = function(c) Settings.ChinaHatColor = c end})
+    ChinaHatSection:AddToggle({Default = Settings.ChinaHatRainbow, Flag = "ChinaHatRainbow", Callback = function(v) Settings.ChinaHatRainbow = v end})
+    
+    local AuraSection = VisualsTab:AddSection({Name = "Aura", Position = "Left"})
+    AuraSection:AddToggle({Default = Settings.AuraEnabled, Flag = "Aura", Callback = function(v) Settings.AuraEnabled = v; if v then applyAura() else clearAura() end end})
+    AuraSection:AddColorPicker({Default = Settings.AuraColor, Flag = "AuraColor", Callback = function(c) Settings.AuraColor = c; if Settings.AuraEnabled then applyAura() end end})
+    for _, name in ipairs(AURA_ORDER) do
+        AuraSection:AddToggle({Default = AuraSelected[name], Flag = "Aura_" .. name, Callback = function(v)
+            AuraSelected[name] = v
+            if Settings.AuraEnabled then applyAura() end
+        end})
+    end
+    
+    local WorldSection = VisualsTab:AddSection({Name = "World", Position = "Right"})
+    WorldSection:AddToggle({Default = Settings.OrbizEnabled, Flag = "Orbiz", Callback = function(v) Settings.OrbizEnabled = v; createOrbiz() end})
+    WorldSection:AddToggle({Default = Settings.TexturePackEnabled, Flag = "TexturePack", Callback = function(v)
+        Settings.TexturePackEnabled = v
+        if v then applyTexturePack() else clearTexturePack() end
+    end})
+    
+    -- Combat Tab
+    local CombatTab = Window:AddTab({Name = "Combat", Icon = "crosshairs"})
+    
+    local CombatSection = CombatTab:AddSection({Name = "Combat", Position = "Left"})
+    CombatSection:AddToggle({Default = Settings.ShootButtonEnabled, Flag = "ShootButton", Callback = function(v)
+        Settings.ShootButtonEnabled = v
+        if v then createShootButton() else if Cache.ShootButton then pcall(function() Cache.ShootButton:Destroy() end); Cache.ShootButton = nil end end
+    end})
+    CombatSection:AddToggle({Default = Settings.SheriffAutoShootEnabled, Flag = "SheriffAutoShoot", Callback = function(v)
+        Settings.SheriffAutoShootEnabled = v
+        safeDisconnect(Cache.SheriffAutoShootConnection); Cache.SheriffAutoShootConnection = nil
+        if v then Cache.SheriffAutoShootConnection = task.spawn(sheriffAutoShootLoop) end
+    end})
+    CombatSection:AddToggle({Default = Settings.KillAllEnabled, Flag = "KillAll", Callback = function(v)
+        Settings.KillAllEnabled = v
+        if v then if not Cache.KillAllRemote then FindKillRemote() end; setupKillAll() else safeDisconnect(Cache.KillAllConn); end
+    end})
+    CombatSection:AddToggle({Default = Settings.FlingMurderer, Flag = "FlingMurderer", Callback = function(v)
+        Settings.FlingMurderer = v
+        if v then local m = getMurdererFling(); if m then flingPlayer(m) else notify("Флинг", "Убийца не найден!", 2); Settings.FlingMurderer = false end end
+    end})
+    CombatSection:AddToggle({Default = Settings.FlingSheriff, Flag = "FlingSheriff", Callback = function(v)
+        Settings.FlingSheriff = v
+        if v then local s = getSheriffFling(); if s then flingPlayer(s) else notify("Флинг", "Шериф не найден!", 2); Settings.FlingSheriff = false end end
+    end})
+    CombatSection:AddToggle({Default = Settings.GrabGunEnabled, Flag = "GrabGun", Callback = function(v)
+        Settings.GrabGunEnabled = v
+        if v then grabGunImproved() end
+    end})
+    
+    local AimbotSection = CombatTab:AddSection({Name = "Aimbot", Position = "Right"})
+    AimbotSection:AddToggle({Default = Settings.FovAimbotEnabled, Flag = "FovAimbot", Callback = function(v)
+        Settings.FovAimbotEnabled = v
+        if v then createFovCircle() end
+        setupFovAimbot()
+    end})
+    AimbotSection:AddSlider({Default = 120, Min = 10, Max = 600, Flag = "FovRadius", Callback = function(v)
+        Settings.FovRadius = v
+        if Cache.FovCircle then Cache.FovCircle.Radius = Settings.FovRadius end
+    end})
+    AimbotSection:AddSlider({Default = 50, Min = 1, Max = 100, Flag = "AimSmoothness", Callback = function(v) Settings.AimSmoothness = v / 100 end})
+    AimbotSection:AddToggle({Default = Settings.AimPredict, Flag = "AimPredict", Callback = function(v) Settings.AimPredict = v end})
+    AimbotSection:AddToggle({Default = Settings.AimWallCheck, Flag = "AimWallCheck", Callback = function(v) Settings.AimWallCheck = v end})
+    
+    -- Movement Tab
+    local MovementTab = Window:AddTab({Name = "Movement", Icon = "wind"})
+    
+    local MovementSection = MovementTab:AddSection({Name = "Movement", Position = "Left"})
+    MovementSection:AddToggle({Default = Settings.FlyEnabled, Flag = "Fly", Callback = function(v) toggleFly(v) end})
+    MovementSection:AddSlider({Default = 50, Min = 10, Max = 200, Flag = "FlySpeed", Callback = function(v) Settings.FlySpeed = v end})
+    MovementSection:AddToggle({Default = Settings.BHopEnabled, Flag = "BHop", Callback = function(v) toggleBHop(v) end})
+    MovementSection:AddSlider({Default = 30, Min = 10, Max = 80, Flag = "BHopSpeed", Callback = function(v) Settings.BHopSpeed = v end})
+    MovementSection:AddToggle({Default = Settings.SpinBotEnabled, Flag = "SpinBot", Callback = function(v) Settings.SpinBotEnabled = v; toggleSpinBot(v) end})
+    MovementSection:AddSlider({Default = 9999, Min = 100, Max = 20000, Flag = "SpinSpeed", Callback = function(v) SpinBot.Speed = v end})
+    MovementSection:AddToggle({Default = Settings.NoclipEnabled, Flag = "Noclip", Callback = function(v) Settings.NoclipEnabled = v; setupNoclip(v) end})
+    MovementSection:AddToggle({Default = Settings.AntiFlingEnabled, Flag = "AntiFling", Callback = function(v) Settings.AntiFlingEnabled = v; setupAntiFling() end})
+    MovementSection:AddToggle({Default = Settings.WallHopEnabled, Flag = "WallHop", Callback = function(v) toggleWallHop(v) end})
+    
+    -- Farm Tab
+    local FarmTab = Window:AddTab({Name = "Farm", Icon = "tractor"})
+    
+    local FarmSection = FarmTab:AddSection({Name = "Auto Farm", Position = "Left"})
+    FarmSection:AddToggle({Default = Settings.AutoFarmEnabled, Flag = "AutoFarm", Callback = function(v) Settings.AutoFarmEnabled = v; setupAutoFarm() end})
+    FarmSection:AddToggle({Default = Settings.AutoRespawn, Flag = "AutoRespawn", Callback = function(v) Settings.AutoRespawn = v end})
+    FarmSection:AddSlider({Default = 20, Min = 5, Max = 50, Flag = "FarmSpeed", Callback = function(v) Settings.AutoFarmSpeed = v end})
+    FarmSection:AddSlider({Default = 40, Min = 10, Max = 100, Flag = "CoinLimit", Callback = function(v) Settings.AutoFarmCoinLimit = v end})
+    FarmSection:AddSlider({Default = 15, Min = 5, Max = 50, Flag = "CoinDelay", Callback = function(v) Settings.AutoFarmCoinDelay = v / 100 end})
+    
+    -- Animations Tab
+    local AnimationsTab = Window:AddTab({Name = "Animations", Icon = "music"})
+    
+    local AnimSection = AnimationsTab:AddSection({Name = "Animation Packs", Position = "Left"})
+    AnimSection:AddToggle({Default = Settings.AnimPackEnabled, Flag = "AnimPackEnabled", Callback = function(v)
+        Settings.AnimPackEnabled = v
+        if v and Settings.AnimPack ~= "" then applyAnimPack(Settings.AnimPack) end
+    end})
+    
+    local AnimGridSection = AnimationsTab:AddSection({Name = "Select Pack", Position = "Right"})
+    for _, packName in ipairs(ANIM_PACK_NAMES) do
+        AnimGridSection:AddButton({Name = packName, Callback = function()
+            Settings.AnimPack = packName
+            if Settings.AnimPackEnabled then
+                applyAnimPack(packName)
+                notify("Анимации", "Применено: " .. packName, 2)
+            else
+                Settings.AnimPackEnabled = true
+                applyAnimPack(packName)
+                notify("Анимации", "Применено: " .. packName, 2)
+            end
+        end})
+    end
+    
+    -- Fun Tab
+    local FunTab = Window:AddTab({Name = "Fun", Icon = "smile"})
+    
+    local FunSection = FunTab:AddSection({Name = "Fun", Position = "Left"})
+    FunSection:AddToggle({Default = Settings.JerkEnabled, Flag = "Jerk", Callback = function(v)
+        Settings.JerkEnabled = v
+        if v then
+            if Cache.JerkConnection then Cache.JerkConnection:Disconnect() end
+            Cache.JerkConnection = RunService.Heartbeat:Connect(function()
+                if not LocalPlayer.Character then return end
+                local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if hrp then hrp.AssemblyLinearVelocity = Vector3.new(math.random(-50,50), math.random(-30,30), math.random(-50,50)) end
+            end)
+        else
+            if Cache.JerkConnection then Cache.JerkConnection:Disconnect() end; Cache.JerkConnection = nil
+        end
+    end})
+    FunSection:AddToggle({Default = Settings.AntiAFKEnabled, Flag = "AntiAFK", Callback = function(v) Settings.AntiAFKEnabled = v; setupAntiAFK() end})
+    FunSection:AddButton({Name = "Rejoin", Callback = function()
+        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+    end})
+end
+
+-- ========================================
+-- ===== ЗАПУСК =====
 -- ========================================
 
 local Loader = NeverLose.new({
     Name = "Planet Hub",
     Content = "v3.0 Ultimate",
-    Process = "Нажмите Login для загрузки",
+    Process = "Введите ключ для активации",
     Default = "",
     Yield = true,
     DefaultVersion = "Main",
-    Versions = {
-        {
-            Idx = "Main",
-            Name = "Planet Hub v3.0",
-            Content = "Полная версия с визуалами и аимом"
-        },
-        {
-            Idx = "Lite",
-            Name = "Planet Hub Lite",
-            Content = "Облегчённая версия без визуалов"
-        }
-    },
     OnGetKey = function()
-        notify("Получение ключа", "https://example.com/getkey", 3)
+        notify("Получение ключа", "Ключ: planet или 12345", 3)
     end,
     OnRedeem = function(key)
-        if key == "planet" or key == "12345" then
+        if key == "planet" or key == "12345" or key == "1" then
             return true, "Добро пожаловать!"
         else
             return false, "Неверный ключ!"
@@ -2677,12 +2726,14 @@ local Loader = NeverLose.new({
     end
 })
 
--- Ждём активацию
 task.spawn(function()
-    local version = Loader:Await()
-    print("Загружена версия: " .. tostring(version))
+    local result = Loader:Await()
+    print("Активировано! Ключ: " .. tostring(result))
     
-    -- Запускаем основной функционал
+    -- Создаём меню
+    createMenu()
+    
+    -- Запускаем основные функции
     startMainUpdate()
     createFovCircle()
     createChinaHatDrawings()
@@ -2741,10 +2792,10 @@ task.spawn(function()
         if Settings.AnimPackEnabled and Settings.AnimPack ~= "" then task.wait(0.3); applyAnimPack(Settings.AnimPack) end
     end)
 
-    notify("Planet Hub", "Загружен! Нажми J для меню", 4)
+    notify("Planet Hub", "Загружен! Нажми J для открытия меню", 4)
     print("✅ PLANET HUB v3.0 LOADED!")
     
-    -- Закрываем лоадер после загрузки
+    -- Закрываем лоадер
     task.wait(1)
     Loader:Unload()
 end)
